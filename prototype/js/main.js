@@ -149,7 +149,7 @@ addEventListener('resize', () => { applyLayout(); renderBar(); });
 /* ---------- Welcome ---------- */
 function showWelcome(){
   $('#welcome').innerHTML = `<div class="welcome" role="dialog" aria-modal="true" aria-labelledby="wt"><div class="wcard">
-    <div style="display:flex;gap:12px;align-items:center"><span class="brand-mark" style="width:46px;height:46px;border-radius:14px">${icon('wifi', 24)}</span><div><h1 id="wt">Signal · ต้นแบบเชิงโต้ตอบ</h1><div class="hint">Social Monitoring Platform สำหรับฝ่ายสื่อสารหน่วยงานภาครัฐ · IS757</div></div></div>
+    <div style="display:flex;gap:12px;align-items:center"><span class="brand-mark" style="width:46px;height:46px;border-radius:14px">${icon('wifi', 24)}</span><div><h1 id="wt">IS757 · ต้นแบบเชิงโต้ตอบ</h1><div class="hint">Social Monitoring Platform สำหรับฝ่ายสื่อสารหน่วยงานภาครัฐ · IS757</div></div></div>
     <p style="margin-top:14px">ต้นแบบนี้ประกอบด้วย <b>Dashboard</b> และ <b>Mention Feed</b> บนเว็บ กับ <b>Alert & Escalation</b> บนมือถือ ใช้ข้อมูลสมมติทั้งหมด กดได้จริงทุกปุ่มสำคัญ</p>
     <div class="wgrid"><button class="wc" data-act="welcomeGo" data-v="1"><span class="tag">กรณีที่ 1 · มือถือ → เว็บ</span><b>ตรวจพบพุ่งผิดปกติ → ยกระดับ</b><span class="d">Push → ตัดสินใจใน 10 วินาที → ยกระดับขั้นตอนเดียว → Dashboard</span><em>4 หน้าจอ</em></button>
       <button class="wc" data-act="welcomeGo" data-v="5"><span class="tag">กรณีที่ 2 · เว็บ</span><b>โพสต์ประชด → แก้ผลความรู้สึก</b><span class="d">คิวตรวจ → หลักฐานของ AI → แก้ผลใน 3 ขั้นตอน → ยกเลิกได้</span><em>4 หน้าจอ</em></button></div>

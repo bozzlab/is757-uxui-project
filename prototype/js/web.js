@@ -38,7 +38,7 @@ function webShell(){
   const titles = { dashboard:'ภาพรวม', feed:'Mention Feed', cases:'แจ้งเตือนและเคส', settings:'ตั้งค่า' };
   return `
   <aside class="w-side" aria-label="เมนูหลัก">
-    <div class="w-logo"><span class="brand-mark">${icon('wifi', 18)}</span><span>Signal</span></div>
+    <div class="w-logo"><span class="brand-mark">${icon('wifi', 18)}</span><span>IS757</span></div>
     <nav class="w-nav" aria-label="โมดูล">
       ${nav.map(([r, ic, lb]) => `<button data-act="nav" data-v="${r}" ${w.route === r ? 'aria-current="page"' : ''} aria-label="${lb}${bd[r] ? ' (' + bd[r] + ' รายการ)' : ''}">${icon(ic, 20)}<span class="lb">${lb}</span>${bd[r] ? `<span class="bdg">${bd[r]}</span>` : ''}</button>`).join('')}
     </nav>
