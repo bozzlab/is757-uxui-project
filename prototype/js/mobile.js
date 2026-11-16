@@ -27,10 +27,10 @@ function lockView(){
     <div class="dt">วันจันทร์ที่ 16 พฤศจิกายน</div><div class="tm num" aria-label="เวลา 14:12">14:12</div>
     <div class="notis" role="region" aria-label="การแจ้งเตือน">
       <button class="noti main" data-act="openAlert" data-v="a1" aria-label="แจ้งเตือนวิกฤต ภัยไซเบอร์ ตัดบัตรรัว ${a.big} ของปกติ เปิดรายละเอียด">
-        <div class="h"><span class="ai">${icon('wifi', 14)}</span><span>สัญญาณ</span><span>ตอนนี้</span></div>
+        <div class="h"><span class="ai">${icon('wifi', 14)}</span><span>Signal</span><span>ตอนนี้</span></div>
         <div class="tt"><span class="sv">${icon('oct', 13)}วิกฤต</span>ภัยไซเบอร์: ตัดบัตรรัว</div>
         <div class="bd">พุ่ง <b class="num">${a.big}</b> ของปกติ · ${num(a.mph)} โพสต์/ชม. — ยังไม่อยู่ใน watchlist</div></button>
-      <div class="noti dim" aria-hidden="true"><div class="h"><span class="ai" style="background:#6b7a86">${icon('wifi', 14)}</span><span>สัญญาณ</span><span>1 ชม. ที่แล้ว</span></div><div class="tt" style="font-size:14px">ธนบัตรปลอมระบาดตลาดนัด · สูง</div></div>
+      <div class="noti dim" aria-hidden="true"><div class="h"><span class="ai" style="background:#6b7a86">${icon('wifi', 14)}</span><span>Signal</span><span>1 ชม. ที่แล้ว</span></div><div class="tt" style="font-size:14px">ธนบัตรปลอมระบาดตลาดนัด · สูง</div></div>
     </div>
     <div class="hintt">${icon('up', 14)} แตะแจ้งเตือนเพื่อดูรายละเอียด</div><div class="hbar"></div></div>`;
 }
