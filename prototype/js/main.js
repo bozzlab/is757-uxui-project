@@ -45,7 +45,7 @@ function renderBar(){
   const sw = (k, t, d) => `<label class="sw"><input type="checkbox" data-demo="${k}" ${D[k] ? 'checked' : ''}><span><b>${t}</b><br><span style="color:var(--muted);font-size:12.5px">${d}</span></span></label>`;
   const showFit = S.mob.screen === 'alert' && S.dev === 'mobile';
   $('#pbar').innerHTML = `<div class="pbar-row">
-    <div class="brand"><span class="brand-mark">${icon('wifi', 17)}</span><div>Signal<small>Social Monitoring · Prototype</small></div></div>
+    <div class="brand"><span class="brand-mark">${icon('wifi', 17)}</span><div>IS757 - UXUI<small>Social Monitoring · Prototype</small></div></div>
     <div class="cases" role="group" aria-label="กรณีการใช้งาน">${[1, 2].map(c => `<button class="cs" data-act="pcase" data-v="${c}" aria-pressed="${S.caseNo === c}">${icon(c === 1 ? 'bell' : 'sliders', 15)}<span class="lbl">${CASES[c]}</span><span class="lbl" style="display:none"></span></button>`).join('')}</div>
     <nav class="steps" aria-label="ขั้นตอนของกรณี">${list.map(s => `<button class="step ${s.n < S.step ? 'done' : ''}" data-act="pstep" data-v="${s.n}" ${s.n === S.step ? 'aria-current="step"' : ''}><b>${s.n}</b><span>${s.t}</span></button>`).join('')}</nav>
     <div class="pctl">
