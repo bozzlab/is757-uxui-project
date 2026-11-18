@@ -121,15 +121,15 @@ const DEFAULTS = () => ({
     reveal: { id:null, reason:'', done:{} },
     export: 'idle',
     settingsTab: 'watch',
-    watchlist: ['นโยบายบัตรเครดิต','ศูนย์รับเรื่องร้องเรียน','คณะกรรมการกำกับ','ธนบัตร'],
+    watchlist: ['บัตร','อายัด','บัตรเครดิต','ภัยไซเบอร์','1111','ธนบัตร','ธนบัตรปลอม','แบงก์','แบงค์','ธุรกรรม'],
     notif: { minSev:'medium', quiet:true, summaryMail:true },
-    order: ['dir','dep','it','legal','area'],
+    order: ['ddir','dir','sdir','media','area'],
     perms: { listener:{ comments:true, reveal:true, export:true, edit:true }, media:{ comments:false, reveal:false, export:true, edit:true }, exec:{ comments:false, reveal:false, export:false, edit:false } },
     digestSent: null,
   },
   mob: {
     screen: 'lock', tab: 'alerts', aid: 'a1', seg: 'todo', sheet: null, mid: null,
-    esc: { recips: [], ch:'chat', text:'', phase:'compose', sentAt:null, left:0, read:0, caseId:null },
+    esc: { recips: [], text:'', phase:'compose', sentAt:null, caseId:null },
     snooze: null,
   },
 });

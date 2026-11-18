@@ -2,7 +2,7 @@
 :root{
   --font:'Noto Sans Thai','Sarabun','Thonburi','Sukhumvit Set',system-ui,-apple-system,'Segoe UI',sans-serif;
   --bg:#F3F5F4; --surface:#fff; --surface-2:#F8FAF9; --surface-3:#EEF2F1;
-  --ink:#14202B; --ink-2:#44525F; --muted:#5F6E7A; --line:#DDE3E2; --line-2:#EBEFEE;
+  --ink:#14202B; --ink-2:#44525F; --muted:#54626D; --line:#DDE3E2; --line-2:#EBEFEE;
   --brand:#0B6B6F; --brand-ink:#fff; --brand-soft:#DDF1EF; --brand-strong:#084F52;
   --accent:#E3A02B; --focus:#1D4ED8;
   --crit:#B42318; --crit-bg:#FDE7E4; --high:#B4390A; --high-bg:#FFE9D6; --med:#8A5A00; --med-bg:#FFF1C9; --low:#175CD3; --low-bg:#DDEBFF; --watch:#5B3FC4; --watch-bg:#ECE6FF;

@@ -2,7 +2,7 @@
 const STEPS = [
   { n:1, c:1, t:'Push บนมือถือ', dev:'mobile', cap:'ตรวจพบเรื่องผิดปกติ <b>นอก watchlist</b> → ส่ง push ที่มี <b>หัวข้อ · ระดับ · ตัวเลขสำคัญ 1 ค่า</b> (F-10)', go(){ S.mob.screen = 'lock'; } },
   { n:2, c:1, t:'รายละเอียดแจ้งเตือน', dev:'mobile', cap:'ระดับ → เกิดอะไร → กระทบแค่ไหน → ปุ่มทำต่อ <b>ใน viewport เดียว</b> เพื่ออ่านและตัดสินใจใน ≤ 10 วินาที (F-11)', go(){ S.mob.screen = 'alert'; S.mob.aid = 'a1'; S.mob.tab = 'alerts'; } },
-  { n:3, c:1, t:'ยกระดับ', dev:'mobile', cap:'ขั้นตอนเดียว: เลือกผู้รับ (ระบบแนะนำ) → ตรวจสรุป → ยืนยัน → <b>เรียกคืนได้ 60 วินาที</b> · ส่งไปช่องทางที่ใช้อยู่ (F-12)', go(){ A.escOpen({ dataset:{ v:'a1' } }); } },
+  { n:3, c:1, t:'ยกระดับ', dev:'mobile', cap:'ขั้นตอนเดียว: เลือกผู้รับ (ระบบแนะนำ) → ตรวจสรุป → ยืนยัน → <b>ส่งอีเมล</b> แล้วแจ้งว่ายกระดับเรียบร้อย (F-12)', go(){ A.escOpen({ dataset:{ v:'a1' } }); } },
   { n:4, c:1, t:'Dashboard (deep link)', dev:'web', cap:'จากมือถือ → เว็บ <b>คงตัวกรองเดิม</b> หัวข้อผิดปกติถูกไฮไลต์ พร้อมเหตุผลเทียบฐานปกติและป้าย “ประมาณการ” (F-01, F-02)', go(){ A.openWeb({}); } },
   { n:5, c:2, t:'Mention Feed · คิวตรวจ', dev:'web', cap:'คิวเรียงตาม <b>engagement × ความไม่แน่นอน</b> — โพสต์ที่ AI ไม่มั่นใจมาก่อน (F-05, F-08)', go(){ const f = S.web.feed; S.web.route = 'feed'; f.tab = 'review'; f.sel = null; f.win = false; f.topic = null; f.onlyHigh = false; } },
   { n:6, c:2, t:'รายละเอียด + หลักฐาน AI', dev:'web', cap:'อ่านในบริบท เห็น <b>คำที่จับได้ · ความมั่นใจ · ป้ายอาจเป็นประชด</b> ตัวตนผู้โพสต์ซ่อนตาม PDPA (F-07, F-15)', go(){ S.web.route = 'feed'; S.web.feed.tab = 'review'; S.web.feed.sel = 'm13'; } },
@@ -14,9 +14,8 @@ const CASES = { 1:'กรณี 1 · ตรวจพบ → แจ้งเต�
 function softReset(caseNo){
   if (caseNo === 1){
     const a = getA('a1'); a.state = 'new'; S.cases = S.cases.filter(c => !c.esc);
-    S.mob.esc = { recips:[], ch:'chat', text:'', phase:'compose', sentAt:null, left:0, read:0, caseId:null }; S.mob.sheet = null; S.mob.snooze = null; S.mob.seg = 'todo';
+    S.mob.esc = { recips:[], text:'', phase:'compose', sentAt:null, caseId:null }; S.mob.sheet = null; S.mob.snooze = null; S.mob.seg = 'todo';
     S.web.deeplink = false; S.web.hl = null; S.web.f = { plat:'all', range:'24h', sent:'all', src:'all' }; S.web.route = 'dashboard'; S.web.dashTab = 'overview'; S.web.modal = null;
-    clearInterval(_undoT); clearTimeout(_readT);
   } else {
     const m = getM('m13'); delete m.fix; S.corrections = S.corrections.filter(c => c.id !== 'm13'); S.web.modal = null; S.web.deeplink = false;
   }
@@ -32,7 +31,6 @@ function goStep(n, keepDev){
 }
 function resetAll(){
   const keep = { theme:S.theme, layout:S.layout, demo:S.demo };
-  clearInterval(_undoT); clearTimeout(_readT);
   S = DEFAULTS(); Object.assign(S, keep);
   goStep(1);
   toast('รีเซ็ตข้อมูลเดโมแล้ว');
@@ -45,7 +43,7 @@ function renderBar(){
   const sw = (k, t, d) => `<label class="sw"><input type="checkbox" data-demo="${k}" ${D[k] ? 'checked' : ''}><span><b>${t}</b><br><span style="color:var(--muted);font-size:12.5px">${d}</span></span></label>`;
   const showFit = S.mob.screen === 'alert' && S.dev === 'mobile';
   $('#pbar').innerHTML = `<div class="pbar-row">
-    <div class="brand"><span class="brand-mark">${icon('wifi', 17)}</span><div>IS757 - UXUI<small>Social Monitoring · Prototype</small></div></div>
+    <div class="brand"><span class="brand-mark">${icon('wifi', 17)}</span><div>Social Listening<small>Prototype · ฝ่ายสื่อสาร</small></div></div>
     <div class="cases" role="group" aria-label="กรณีการใช้งาน">${[1, 2].map(c => `<button class="cs" data-act="pcase" data-v="${c}" aria-pressed="${S.caseNo === c}">${icon(c === 1 ? 'bell' : 'sliders', 15)}<span class="lbl">${CASES[c]}</span><span class="lbl" style="display:none"></span></button>`).join('')}</div>
     <nav class="steps" aria-label="ขั้นตอนของกรณี">${list.map(s => `<button class="step ${s.n < S.step ? 'done' : ''}" data-act="pstep" data-v="${s.n}" ${s.n === S.step ? 'aria-current="step"' : ''}><b>${s.n}</b><span>${s.t}</span></button>`).join('')}</nav>
     <div class="pctl">
@@ -149,7 +147,7 @@ addEventListener('resize', () => { applyLayout(); renderBar(); });
 /* ---------- Welcome ---------- */
 function showWelcome(){
   $('#welcome').innerHTML = `<div class="welcome" role="dialog" aria-modal="true" aria-labelledby="wt"><div class="wcard">
-    <div style="display:flex;gap:12px;align-items:center"><span class="brand-mark" style="width:46px;height:46px;border-radius:14px">${icon('wifi', 24)}</span><div><h1 id="wt">IS757 · ต้นแบบเชิงโต้ตอบ</h1><div class="hint">Social Monitoring Platform สำหรับฝ่ายสื่อสารหน่วยงานภาครัฐ · IS757</div></div></div>
+    <div style="display:flex;gap:12px;align-items:center"><span class="brand-mark" style="width:46px;height:46px;border-radius:14px">${icon('wifi', 24)}</span><div><h1 id="wt">Social Listening · ต้นแบบเชิงโต้ตอบ</h1><div class="hint">แพลตฟอร์มติดตามสื่อสังคมออนไลน์สำหรับฝ่ายสื่อสารหน่วยงานภาครัฐ</div></div></div>
     <p style="margin-top:14px">ต้นแบบนี้ประกอบด้วย <b>Dashboard</b> และ <b>Mention Feed</b> บนเว็บ กับ <b>Alert & Escalation</b> บนมือถือ ใช้ข้อมูลสมมติทั้งหมด กดได้จริงทุกปุ่มสำคัญ</p>
     <div class="wgrid"><button class="wc" data-act="welcomeGo" data-v="1"><span class="tag">กรณีที่ 1 · มือถือ → เว็บ</span><b>ตรวจพบพุ่งผิดปกติ → ยกระดับ</b><span class="d">Push → ตัดสินใจใน 10 วินาที → ยกระดับขั้นตอนเดียว → Dashboard</span><em>4 หน้าจอ</em></button>
       <button class="wc" data-act="welcomeGo" data-v="5"><span class="tag">กรณีที่ 2 · เว็บ</span><b>โพสต์ประชด → แก้ผลความรู้สึก</b><span class="d">คิวตรวจ → หลักฐานของ AI → แก้ผลใน 3 ขั้นตอน → ยกเลิกได้</span><em>4 หน้าจอ</em></button></div>

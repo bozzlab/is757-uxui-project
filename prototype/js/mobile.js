@@ -26,11 +26,11 @@ function lockView(){
   return `<div class="lock"><div class="st" aria-hidden="true"><span></span><span>${icon('wifi', 16)}</span></div>
     <div class="dt">วันจันทร์ที่ 16 พฤศจิกายน</div><div class="tm num" aria-label="เวลา 14:12">14:12</div>
     <div class="notis" role="region" aria-label="การแจ้งเตือน">
-      <button class="noti main" data-act="openAlert" data-v="a1" aria-label="แจ้งเตือนวิกฤต ภัยไซเบอร์ ตัดบัตรรัว ${a.big} ของปกติ เปิดรายละเอียด">
-        <div class="h"><span class="ai">${icon('wifi', 14)}</span><span>IS757</span><span>ตอนนี้</span></div>
+      <button class="noti main" data-act="openAlert" data-v="a1">
+        <div class="h"><span class="ai">${icon('wifi', 14)}</span><span>Social Listening</span><span>ตอนนี้</span></div>
         <div class="tt"><span class="sv">${icon('oct', 13)}วิกฤต</span>ภัยไซเบอร์: ตัดบัตรรัว</div>
         <div class="bd">พุ่ง <b class="num">${a.big}</b> ของปกติ · ${num(a.mph)} โพสต์/ชม. — ยังไม่อยู่ใน watchlist</div></button>
-      <div class="noti dim" aria-hidden="true"><div class="h"><span class="ai" style="background:#6b7a86">${icon('wifi', 14)}</span><span>IS757</span><span>1 ชม. ที่แล้ว</span></div><div class="tt" style="font-size:14px">ธนบัตรปลอมระบาดตลาดนัด · สูง</div></div>
+      <div class="noti dim" aria-hidden="true"><div class="h"><span class="ai" style="background:#6b7a86">${icon('wifi', 14)}</span><span>Social Listening</span><span>1 ชม. ที่แล้ว</span></div><div class="tt" style="font-size:14px">ธนบัตรปลอมระบาดตลาดนัด · สูง</div></div>
     </div>
     <div class="hintt">${icon('up', 14)} แตะแจ้งเตือนเพื่อดูรายละเอียด</div><div class="hbar"></div></div>`;
 }
@@ -83,12 +83,11 @@ function sparkline(){
 
 /* 3) ยกระดับ — ขั้นตอนเดียว: ผู้รับ → สรุป → ยืนยัน → ส่งแล้ว */
 function escText(a){
-  return `[ยกระดับ · ${SEV[a.sev].label}] ${a.title}\n• ตรวจพบ ${clock(a.ago)} — ${num(a.mph)} โพสต์/ชม. (${a.big} ของปกติ)${a.off ? ' · นอก watchlist' : ''}\n• โพสต์เกินเกณฑ์ engagement ${a.hi} โพสต์ · FB ${a.mix.fb}% · X ${a.mix.x}% · TikTok ${a.mix.tt}%\n• ข้อควรระวัง: TikTok ล่าช้า ~25 นาที / ค่านี้เป็นประมาณการของระบบ\n• รายละเอียด: IS757.social-monitoring.com/a/${a.id.toUpperCase()}-1042\nส่งโดย คุณใบเตย · ฝ่ายสื่อสาร`;
+  return `หัวข้ออีเมล: [ยกระดับ · ${SEV[a.sev].label}] ${a.title}\n• ตรวจพบ ${clock(a.ago)} — ${num(a.mph)} โพสต์/ชม. (${a.big} ของปกติ)${a.off ? ' · นอก watchlist' : ''}\n• โพสต์เกินเกณฑ์ engagement ${a.hi} โพสต์ · FB ${a.mix.fb}% · X ${a.mix.x}% · TikTok ${a.mix.tt}%\n• ข้อควรระวัง: TikTok ล่าช้า ~25 นาที / ค่านี้เป็นประมาณการของระบบ\n• รายละเอียด: social-listening.example/a/${a.id.toUpperCase()}-1042\nส่งโดย คุณใบเตย · ฝ่ายสื่อสาร`;
 }
 function mEscalate(){
   const m = S.mob, e = m.esc, a = getA(m.aid), ph = e.phase;
   if (ph === 'sent') return mSent();
-  const chans = [['chat', 'แชทสายงาน', 'msg'], ['mail', 'อีเมล FYI', 'mail'], ['copy', 'คัดลอก', 'copy']];
   const recipients = Object.keys(PEOPLE);
   const busy = ph === 'sending';
   return `<div class="m-nav"><button class="m-icon" data-act="escBack" aria-label="กลับ" ${busy ? 'disabled' : ''}>${icon('cl', 24)}</button><div class="t">ยกระดับเรื่องนี้</div><span class="m-icon" aria-hidden="true"></span></div>
@@ -97,20 +96,15 @@ function mEscalate(){
     ${ph === 'failed' ? `<div class="mstate err" role="alert" style="margin-top:10px">${icon('tri', 18)}<span><b>ส่งไม่สำเร็จ</b> — เก็บเป็นฉบับร่างให้แล้ว ลองส่งใหม่ได้</span></div>` : ''}
     <div class="es-sec">① ผู้รับ <span class="sug">แนะนำตามประเภทเรื่อง</span></div>
     ${recipients.map(k => `<button class="rc" role="checkbox" aria-checked="${e.recips.includes(k)}" data-act="togRc" data-v="${k}" ${busy ? 'disabled' : ''}><span class="ck">${icon('check', 16)}</span><div style="flex:1"><b>${PEOPLE[k].name}</b><small>${PEOPLE[k].who} · ${PEOPLE[k].ch}</small></div>${a.recips.includes(k) ? '<span class="sug" style="margin-left:0">แนะนำ</span>' : ''}</button>`).join('')}
-    <div class="es-sec">② ช่องทาง</div>
-    <div class="seg" role="group" aria-label="ช่องทาง" style="display:flex;width:100%">${chans.map(([k, l, ic]) => `<button data-act="setCh" data-v="${k}" aria-pressed="${e.ch === k}" style="flex:1;justify-content:center;min-height:44px" ${busy ? 'disabled' : ''}>${icon(ic, 16)}${l}</button>`).join('')}</div>
-    <div class="es-sec">③ ตรวจสรุปก่อนส่ง <span class="hint" style="font-weight:400">· แก้ไขได้</span></div>
+    <div class="es-sec">② ตรวจสรุปก่อนส่ง <span class="hint" style="font-weight:400">· ส่งทางอีเมล · แก้ไขได้</span></div>
     <label class="sr" for="sum">สรุปที่จะส่ง</label><textarea id="sum" class="sumbox" data-live="esc" ${busy ? 'disabled' : ''}>${esc(e.text)}</textarea>
   </div>
-  <div style="padding:10px 16px 28px;border-top:1px solid var(--line);flex:none"><button class="mbtn brand block" style="width:100%" data-act="escReview" ${e.recips.length ? '' : 'aria-disabled="true"'}>${ph === 'failed' ? icon('refresh', 20) + 'ลองส่งใหม่' : icon('send', 20) + 'ส่งถึง ' + e.recips.length + ' ผู้รับ'}</button>${e.recips.length ? '' : '<p class="hint" style="text-align:center;margin:6px 0 0">เลือกผู้รับอย่างน้อย 1 รายการ</p>'}</div>`;
+  <div style="padding:10px 16px 28px;border-top:1px solid var(--line);flex:none"><button class="mbtn brand block" style="width:100%" data-act="escReview" ${e.recips.length ? '' : 'aria-disabled="true"'}>${ph === 'failed' ? icon('refresh', 20) + 'ลองส่งใหม่' : icon('mail', 20) + 'ส่งอีเมลถึง ' + e.recips.length + ' ผู้รับ'}</button>${e.recips.length ? '' : '<p class="hint" style="text-align:center;margin:6px 0 0">เลือกผู้รับอย่างน้อย 1 รายการ</p>'}</div>`;
 }
 function mSent(){
-  const e = S.mob.esc, a = getA(S.mob.aid), left = e.left;
+  const e = S.mob.esc, a = getA(S.mob.aid);
   return `<div class="m-nav"><span class="m-icon" aria-hidden="true"></span><div class="t">ส่งแล้ว</div><button class="m-icon" data-act="escDone" aria-label="เสร็จสิ้น">${icon('x', 22)}</button></div>
-  <div class="m-scroll"><div class="sent-ok" role="status"><div class="big">${icon('checkc', 40)}</div><h2 style="margin:0;font-size:22px">ยกระดับแล้ว</h2><div class="hint">${e.sentAt} · ${e.caseId} · บันทึกในเคสแล้ว</div></div>
-    <div class="mc" style="margin-top:10px"><h4>สถานะการส่ง</h4>${e.recips.map((k, i) => `<div class="dl"><span class="avatar" style="width:34px;height:34px;font-size:13px">${PEOPLE[k].who.slice(3, 4)}</span><div><b>${PEOPLE[k].name}</b><div class="hint">${PEOPLE[k].who}</div></div><span class="st2 ${i < e.read ? 'read' : ''}">${i < e.read ? icon('checkc', 14) + ' อ่านแล้ว' : icon('send', 14) + ' ส่งแล้ว'}</span></div>`).join('')}</div>
-    <div class="mc"><h4>เรียกคืน / แก้ไข</h4><p class="hint" style="margin:0 0 10px" id="undo-p">${left > 0 ? `ยังเรียกคืนได้อีก <span class="cd" id="cd">${left}</span> วินาที — หลังจากนั้นผู้รับอาจอ่านแล้ว` : 'พ้นเวลาเรียกคืนแล้ว — ส่งข้อความติดตามผลในแชทได้'}</p>
-      <button class="mbtn block" style="width:100%;min-height:48px" data-act="escUndo" ${left > 0 ? '' : 'disabled aria-disabled="true"'}>${icon('undo', 18)}เรียกคืนและแก้ไข</button></div>
+  <div class="m-scroll"><div class="sent-ok" role="status"><div class="big">${icon('checkc', 40)}</div><h2 style="margin:0;font-size:22px">ยกระดับแล้ว</h2><div class="hint">ส่งอีเมลถึง ${esc(e.recips.map(k => PEOPLE[k].name).join(', '))}</div><div class="hint num">${e.sentAt} · ${e.caseId} · บันทึกในเคสแล้ว</div></div>
     <button class="mlink block" style="width:100%" data-act="openWeb" data-v="${a.id}">${icon('mon', 17)}เปิดบนเว็บเพื่อดูเคส ${icon('up', 14)}</button></div>`;
 }
 
@@ -151,8 +145,8 @@ function sheetView(){
   if (sh === 'confirm'){
     const e = S.mob.esc, who = e.recips.map(k => PEOPLE[k].name).join(', ');
     return `<div class="sheet-scrim" data-act="sheetClose"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sh-t"><h3 id="sh-t">ยืนยันการยกระดับ</h3>
-    <p>ส่งสรุป <b>${a.short}</b> ถึง <b>${who}</b> ผ่าน${{ chat: 'แชทสายงาน', mail: 'อีเมล FYI', copy: 'การคัดลอกข้อความ' }[e.ch]} — ทุกคนที่ได้รับจะเห็นทันที</p>
-    <div class="mstate warn" style="margin:0 0 12px">${icon('undo', 16)}<span>หลังส่งแล้ว เรียกคืน/แก้ไขได้ภายใน 60 วินาที</span></div>
+    <p>ส่งสรุป <b>${a.short}</b> ถึง <b>${who}</b> ทาง<b>อีเมล</b> — ผู้รับจะเห็นทันที</p>
+    <div class="mstate warn" style="margin:0 0 12px">${icon('info', 16)}<span>ส่งอีเมลแล้วแก้ไขหรือเรียกคืนไม่ได้ — ตรวจรายชื่อผู้รับและข้อความก่อนกดยืนยัน</span></div>
     <button class="mbtn primary block" style="width:100%" data-act="escSend" data-first ${e.phase === 'sending' ? 'disabled' : ''}>${e.phase === 'sending' ? '<span class="spin"></span>กำลังส่ง…' : icon('send', 20) + 'ยืนยันและส่ง'}</button>
     <button class="mbtn block" style="width:100%;margin-top:8px;min-height:48px" data-act="sheetClose" ${e.phase === 'sending' ? 'disabled' : ''}>กลับไปแก้ไข</button></div></div>`;
   }
@@ -160,7 +154,6 @@ function sheetView(){
 }
 
 /* ================= Actions (มือถือ) ================= */
-let _undoT = null, _readT = null;
 function mUpdate(extra){ renderMob(); if (extra) extra(); }
 Object.assign(A, {
   mtab(el){ const m = S.mob; m.tab = el.dataset.v; m.screen = el.dataset.v; m.sheet = null; renderMob(); },
@@ -175,12 +168,11 @@ Object.assign(A, {
   /* ยกระดับ */
   escOpen(el){
     const m = S.mob, a = getA(el.dataset.v), e = m.esc;
-    if (e.aid !== a.id || e.phase === 'sent') Object.assign(e, { aid:a.id, recips:[...a.recips], ch:'chat', text:escText(a), phase:'compose', left:0, read:0, caseId:null });
+    if (e.aid !== a.id || e.phase === 'sent') Object.assign(e, { aid:a.id, recips:[...a.recips], text:escText(a), phase:'compose', caseId:null });
     m.screen = 'escalate'; renderMob();
   },
   escBack(){ S.mob.screen = 'alert'; renderMob(); },
   togRc(el){ const e = S.mob.esc, k = el.dataset.v; e.recips = e.recips.includes(k) ? e.recips.filter(x => x !== k) : [...e.recips, k]; renderMob(); },
-  setCh(el){ S.mob.esc.ch = el.dataset.v; renderMob(); },
   escReview(){ const e = S.mob.esc; if (!e.recips.length) return toast('เลือกผู้รับอย่างน้อย 1 รายการ', { kind:'error' }); S.mob.sheet = 'confirm'; S.mob._sheetFocus = true; renderMob(); },
   escSend(){
     const m = S.mob, e = m.esc; if (e.phase === 'sending') return;
@@ -188,22 +180,10 @@ Object.assign(A, {
     setTimeout(() => {
       if (S.demo.sendFail){ e.phase = 'failed'; m.sheet = null; renderMob(); announce('ส่งไม่สำเร็จ เก็บเป็นฉบับร่างแล้ว'); return; }
       const a = getA(m.aid); a.state = 'escalated';
-      e.phase = 'sent'; e.sentAt = '14:31 น.'; e.left = 60; e.read = 0; e.caseId = 'C-2569-0' + (15 + S.cases.filter(c => c.esc).length);
-      S.cases.unshift({ id:e.caseId, title:a.title, type:'ยกระดับ', owner:'ใบเตย', esc:true, read:false, to:e.recips.map(k => PEOPLE[k].name).join(', '), age:'เมื่อสักครู่' });
+      e.phase = 'sent'; e.sentAt = '14:31 น.'; e.caseId = 'C-2569-0' + (15 + S.cases.filter(c => c.esc).length);
+      S.cases.unshift({ id:e.caseId, title:a.title, type:'ยกระดับ', owner:'ใบเตย', esc:true, to:e.recips.map(k => PEOPLE[k].name).join(', '), age:'เมื่อสักครู่' });
       m.sheet = null; renderMob(); announce('ส่งแล้ว');
-      clearInterval(_undoT); _undoT = setInterval(() => {
-        if (S.mob.esc.phase !== 'sent'){ clearInterval(_undoT); return; }
-        e.left = Math.max(0, e.left - 1);
-        const cd = $('#cd'); if (cd) cd.textContent = e.left; if (e.left === 0){ clearInterval(_undoT); if (S.mob.screen === 'escalate') renderMob(); }
-      }, 1000);
-      clearTimeout(_readT); _readT = setTimeout(() => { if (S.mob.esc.phase === 'sent'){ e.read = 1; const c = S.cases.find(x => x.id === e.caseId); if (c) c.read = true; if (S.mob.screen === 'escalate') renderMob(); if (S.web.route === 'cases') renderWeb(); } }, 3200);
     }, S.demo.slow ? 2200 : 1000);
-  },
-  escUndo(){
-    const m = S.mob, e = m.esc; if (e.left <= 0) return;
-    clearInterval(_undoT); clearTimeout(_readT);
-    S.cases = S.cases.filter(c => c.id !== e.caseId); getA(m.aid).state = 'new'; e.phase = 'compose'; e.left = 0;
-    renderMob(); toast('เรียกคืนแล้ว — แก้ไขข้อความแล้วส่งใหม่ได้', { ms:5000 }); announce('เรียกคืนการยกระดับแล้ว');
   },
   escDone(){ const m = S.mob; m.screen = 'alerts'; m.tab = 'alerts'; m.seg = 'done'; renderMob(); },
   /* ข้ามอุปกรณ์ */

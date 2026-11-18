@@ -1,6 +1,6 @@
-# Signal — Social Monitoring Platform (Interactive Prototype)
+# Social Listening — Social Monitoring Platform (Interactive Prototype)
 
-IS757 UX/UI and Customer Experience. A static prototype built with plain HTML, CSS and JavaScript; no build step is required. All data is fictional.
+Interactive prototype for the IS757 course (UX/UI and Customer Experience). A static prototype built with plain HTML, CSS and JavaScript; no build step is required. All data is fictional.
 
 ## Scenarios
 
