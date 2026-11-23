@@ -506,3 +506,6 @@ input[type=range]{width:100%;accent-color:var(--brand)}
 
 .sheet.modal-fail.warn{border-top-color:var(--med)}
 .sheet.modal-fail.warn .mf-ic{background:var(--med-bg);color:var(--med)}
+
+.modal.exp-fail{max-width:440px;border-top:5px solid var(--crit)}
+.modal.exp-fail .mf-ic{width:52px;height:52px;border-radius:50%;background:var(--crit-bg);color:var(--crit);display:grid;place-items:center;margin-bottom:10px}

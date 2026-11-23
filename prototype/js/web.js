@@ -295,6 +295,12 @@ function modalView(){
       <div class="modal-f"><span class="hint" style="margin-right:auto">ขั้นที่ 2 · ยืนยัน · ยกเลิกภายหลังได้</span><button class="btn" data-act="closeModal" ${ph === 'saving' ? 'disabled' : ''}>ยกเลิก</button>
         <button class="btn primary" data-act="saveFix" ${!c.reason ? 'aria-disabled="true"' : ''} ${ph === 'saving' ? 'aria-disabled="true"' : ''}>${ph === 'saving' ? '<span class="spin"></span>กำลังบันทึก…' : ph === 'error' ? icon('refresh', 16) + 'ลองใหม่' : icon('check', 16) + 'ยืนยันการแก้'}</button></div></div></div>`;
   }
+  if (md === 'exportFail'){
+    return `<div class="scrim"><div class="modal exp-fail" role="alertdialog" aria-modal="true" aria-labelledby="mt" aria-describedby="md">
+      <div class="modal-b" style="padding-top:22px"><div class="mf-ic">${icon('tri', 28)}</div><h3 id="mt" style="margin:0 0 6px;font-size:19px">Export CSV ไม่สำเร็จ</h3>
+      <p id="md" style="margin:0;color:var(--ink-2)">การเชื่อมต่อขัดข้อง ไฟล์ยังไม่ถูกสร้าง ข้อมูลและตัวกรองที่เลือกไว้ยังอยู่ครบ ลองใหม่ได้ หรือแจ้งผู้ดูแลระบบหากยังไม่สำเร็จ</p></div>
+      <div class="modal-f"><button class="btn" data-act="closeModal">ปิด</button><button class="btn primary" data-act="exportRetry" data-first>${icon('refresh', 16)}ลองใหม่</button></div></div></div>`;
+  }
   if (md === 'reveal'){
     const m = getM(w.reveal.id), r = w.reveal;
     return `<div class="scrim" data-act="scrim"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="mt">
@@ -364,7 +370,7 @@ Object.assign(A, {
     const w = S.web; if (w.export === 'busy') return;
     w.export = 'busy'; renderWeb();
     setTimeout(() => {
-      if (S.demo.error){ w.export = 'error'; renderWeb(); announce('export ไม่สำเร็จ'); return; }
+      if (S.demo.error){ w.export = 'idle'; w.modal = 'exportFail'; renderWeb({ openModal:true }); announce('export ไม่สำเร็จ'); return; }
       const rows = [['เวลา', 'แพลตฟอร์ม', 'ข้อความ', 'engagement', 'ความรู้สึก', 'ลิงก์ต้นทาง']].concat(S.mentions.map(m => [clock(m.ago), PLAT[m.plat].name, m.text, m.eng, SENT[effSent(m)].label, 'https://example.org/post/' + m.id]));
       const csv = '﻿' + rows.map(r => r.map(c => '"' + String(c).replace(/"/g, '""') + '"').join(',')).join('\n');
       try { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type:'text/csv;charset=utf-8' })); a.download = 'signal-export-2569-11-16.csv'; document.body.appendChild(a); a.click(); a.remove(); } catch (e) {}
@@ -406,6 +412,7 @@ Object.assign(A, {
   revealOpen(el){ if (S.demo.noEdit) return toast('ทีมของคุณไม่ได้รับสิทธิ์เปิดดูตัวตน', { kind:'error' }); S.web.reveal = { id:el.dataset.v, reason:'', done:S.web.reveal.done }; S.web.modal = 'reveal'; renderWeb({ openModal:true, keepDet:true }); },
   pickRev(el){ S.web.reveal.reason = el.dataset.v; renderWeb({ keepDet:true }); },
   doReveal(){ const r = S.web.reveal; if (!r.reason) return; r.done[r.id] = true; S.audit.unshift({ who:'คุณบอส', post:'โพสต์ ' + r.id.toUpperCase(), why:r.reason, at:'14:30 น.' }); S.web.modal = null; renderWeb({ keepDet:true }); toast('เปิดดูตัวตนแล้ว · บันทึกใน audit log'); },
+  exportRetry(){ S.web.modal = null; A.export(); },
   closeModal(){ S.web.modal = null; renderWeb({ keepDet:true }); },
   scrim(el, e){ if (e.target === el) A.closeModal(); },
   /* ตั้งค่า */
