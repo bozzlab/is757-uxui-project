@@ -503,3 +503,6 @@ input[type=range]{width:100%;accent-color:var(--brand)}
 .mcall b{display:block;font-size:14px;line-height:1.35}.mcall small{color:var(--muted);font-size:12.5px}
 .mcall .go{font-weight:700;color:var(--brand-strong);font-size:14px}
 :root[data-theme="dark"] .mcall .go{color:var(--brand)}
+
+.sheet.modal-fail.warn{border-top-color:var(--med)}
+.sheet.modal-fail.warn .mf-ic{background:var(--med-bg);color:var(--med)}

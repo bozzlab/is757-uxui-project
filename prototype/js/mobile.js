@@ -150,6 +150,13 @@ function sheetView(){
     <button class="mbtn primary block" style="width:100%" data-act="escSend" data-first ${e.phase === 'sending' ? 'disabled' : ''}>${e.phase === 'sending' ? '<span class="spin"></span>กำลังส่ง…' : icon('send', 20) + 'ยืนยันและส่ง'}</button>
     <button class="mbtn block" style="width:100%;margin-top:8px;min-height:48px" data-act="sheetClose" ${e.phase === 'sending' ? 'disabled' : ''}>กลับไปแก้ไข</button></div></div>`;
   }
+  if (sh === 'taken'){
+    return `<div class="sheet-scrim center"><div class="sheet modal-fail warn" role="alertdialog" aria-modal="true" aria-labelledby="sh-t" aria-describedby="sh-d">
+    <div class="mf-ic">${icon('user', 28)}</div><h3 id="sh-t">มีผู้รับเรื่องนี้แล้ว</h3>
+    <p id="sh-d"><b>คุณธนา</b> รับเรื่อง <b>${a.short}</b> ไว้แล้วเมื่อ 14:20 น. หากยกระดับซ้ำ ผู้รับอาจได้อีเมลสองฉบับเรื่องเดียวกัน ยังต้องการยกระดับต่อหรือไม่</p>
+    <button class="mbtn block" style="width:100%" data-act="takenGo" data-first>${icon('send', 20)}ยกระดับต่อ</button>
+    <button class="mbtn brand block" style="width:100%;margin-top:8px" data-act="sheetClose">กลับไปดูรายละเอียด</button></div></div>`;
+  }
   if (sh === 'fail'){
     const e = S.mob.esc, calls = [...e.recips.map(k => ({ name:PEOPLE[k].who + ' · ' + PEOPLE[k].name, tel:PEOPLE[k].tel })), DUTY];
     return `<div class="sheet-scrim center"><div class="sheet modal-fail" role="alertdialog" aria-modal="true" aria-labelledby="sh-t" aria-describedby="sh-d">
@@ -178,9 +185,11 @@ Object.assign(A, {
   /* ยกระดับ */
   escOpen(el){
     const m = S.mob, a = getA(el.dataset.v), e = m.esc;
+    if (S.demo.taken && a.state === 'new' && m.takenAck !== a.id){ m.aid = a.id; m.screen = 'alert'; m.tab = 'alerts'; m.sheet = 'taken'; m._sheetFocus = true; renderMob(); return; }
     if (e.aid !== a.id || e.phase === 'sent') Object.assign(e, { aid:a.id, recips:[...a.recips], text:escText(a), phase:'compose', caseId:null });
     m.screen = 'escalate'; renderMob();
   },
+  takenGo(){ const m = S.mob; m.takenAck = m.aid; m.sheet = null; A.escOpen({ dataset:{ v:m.aid } }); },
   escRetry(){ const m = S.mob; m.sheet = 'confirm'; renderMob(); A.escSend(); },
   callTap(el, e){ e.preventDefault(); toast('ต้นแบบ: โทรหา ' + el.dataset.v); },
   escBack(){ S.mob.screen = 'alert'; renderMob(); },
@@ -195,7 +204,7 @@ Object.assign(A, {
       e.phase = 'sent'; e.sentAt = '14:31 น.'; e.caseId = 'C-2569-0' + (15 + S.cases.filter(c => c.esc).length);
       S.cases.unshift({ id:e.caseId, title:a.title, type:'ยกระดับ', owner:'บอส', esc:true, to:e.recips.map(k => PEOPLE[k].name).join(', '), age:'เมื่อสักครู่' });
       m.sheet = null; renderMob(); announce('ส่งแล้ว');
-    }, S.demo.slow ? 2200 : 1000);
+    }, S.demo.slow ? SLOW_MS : 1000);
   },
   escDone(){ const m = S.mob; m.screen = 'alerts'; m.tab = 'alerts'; m.seg = 'done'; renderMob(); },
   /* ข้ามอุปกรณ์ */

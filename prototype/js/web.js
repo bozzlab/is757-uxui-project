@@ -341,7 +341,7 @@ function pgSettings(){
 /* ================= Actions (เว็บ) ================= */
 function webLoad(ms = 520){
   const w = S.web; w.loading = true; renderWeb();
-  clearTimeout(webLoad.t); webLoad.t = setTimeout(() => { w.loading = false; renderWeb(); announce('โหลดข้อมูลเสร็จแล้ว'); }, S.demo.slow ? 2200 : ms);
+  clearTimeout(webLoad.t); webLoad.t = setTimeout(() => { w.loading = false; renderWeb(); announce('โหลดข้อมูลเสร็จแล้ว'); }, S.demo.slow ? SLOW_MS : ms);
 }
 Object.assign(A, {
   noop(el, e){ e.preventDefault(); toast('ต้นแบบ: ลิงก์ต้นฉบับไม่เปิดจริง'); },
@@ -399,7 +399,7 @@ Object.assign(A, {
       S.web.modal = null; renderWeb({ keepDet:true });
       toast('แก้ผลแล้ว: ' + SENT[m.sys].label + ' → ' + SENT[c.to].label, { act:() => A.undoFix({ dataset:{ v:m.id } }), label:'ยกเลิก', ms:8000 });
       announce('แก้ผลความรู้สึกสำเร็จ ระบบจะนำไปปรับ');
-    }, S.demo.slow ? 2000 : 900);
+    }, S.demo.slow ? SLOW_MS : 900);
   },
   undoFix(el){ const m = getM(el.dataset.v); if (!m.fix) return; S.corrections = S.corrections.filter(c => c.id !== m.id); delete m.fix; renderWeb({ keepDet:true }); toast('ยกเลิกการแก้แล้ว — กลับเป็นผลเดิมของระบบ'); },
   /* PDPA */

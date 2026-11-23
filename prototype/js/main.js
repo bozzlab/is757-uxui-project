@@ -15,7 +15,7 @@ function softReset(caseNo){
   if (caseNo === 1){
     const a = getA('a1'); a.state = 'new'; S.cases = S.cases.filter(c => !c.esc);
     S.mob.esc = { recips:[], text:'', phase:'compose', sentAt:null, caseId:null }; S.mob.sheet = null; S.mob.snooze = null; S.mob.seg = 'todo';
-    S.web.deeplink = false; S.web.hl = null; S.web.f = { plat:'all', range:'24h', sent:'all', src:'all' }; S.web.route = 'dashboard'; S.web.dashTab = 'overview'; S.web.modal = null;
+    S.mob.takenAck = null; S.web.deeplink = false; S.web.hl = null; S.web.f = { plat:'all', range:'24h', sent:'all', src:'all' }; S.web.route = 'dashboard'; S.web.dashTab = 'overview'; S.web.modal = null;
   } else {
     const m = getM('m13'); delete m.fix; S.corrections = S.corrections.filter(c => c.id !== 'm13'); S.web.modal = null; S.web.deeplink = false;
   }
@@ -107,7 +107,7 @@ document.addEventListener('click', e => {
 document.addEventListener('change', e => {
   const t = e.target;
   if (t.matches('select[data-act]')){ A[t.dataset.act](t, e); return; }
-  if (t.matches('[data-demo]')){ S.demo[t.dataset.demo] = t.checked; if (t.dataset.demo === 'error'){ S.web.loading = false; } syncDemo(); toast((t.checked ? 'เปิด' : 'ปิด') + 'สถานะจำลอง'); }
+  if (t.matches('[data-demo]')){ S.demo[t.dataset.demo] = t.checked; S.mob.takenAck = null; if (t.dataset.demo === 'error'){ S.web.loading = false; } syncDemo(); toast((t.checked ? 'เปิด' : 'ปิด') + 'สถานะจำลอง'); }
   if (t.matches('[data-live="thr"]')){ S.web.threshold = +t.value; renderWeb(); toast('ปรับเกณฑ์ engagement แล้ว'); }
 });
 document.addEventListener('input', e => {

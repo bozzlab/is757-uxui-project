@@ -132,6 +132,8 @@ const ALERTS = [
     mix:{ fb:62, x:30, tt:8 }, off:false, recips:['media'], state:'closed' },
 ];
 
+const SLOW_MS = 7000;   // เวลารอ (มิลลิวินาที) ในสถานะ "เครือข่ายช้า"
+
 const PEOPLE = {
   ddir: { name:'รองผู้อำนวยการ ฝ่ายสื่อสาร',   who:'คุณธนา',    ch:'อีเมล', tel:'02-000-0101' },
   dir:  { name:'ผู้อำนวยการฝ่ายสื่อสาร',         who:'คุณนภา',    ch:'อีเมล', tel:'02-000-0102' },
