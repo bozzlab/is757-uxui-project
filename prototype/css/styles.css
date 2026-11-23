@@ -493,3 +493,13 @@ input[type=range]{width:100%;accent-color:var(--brand)}
 .mc{border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:10px;background:var(--surface)}
 .mc h4{margin:0 0 6px;font-size:14px}
 .mdet{padding:4px 18px 24px;overflow:auto;flex:1}
+
+/* modal ส่งไม่สำเร็จ (วิกฤต: ต้องตัดสินใจก่อนไปต่อ จึงไม่ปิดเมื่อแตะพื้นหลัง) */
+.sheet-scrim.center{align-items:center;padding:20px}
+.sheet.modal-fail{border-radius:22px;padding:22px 18px 18px;border-top:5px solid var(--crit);animation:fin .18s}
+.sheet.modal-fail:before{display:none}
+.mf-ic{width:52px;height:52px;border-radius:50%;background:var(--crit-bg);color:var(--crit);display:grid;place-items:center;margin-bottom:10px}
+.mcall{display:flex;align-items:center;gap:12px;min-height:56px;padding:8px 12px;border:1.5px solid var(--line);border-radius:14px;margin-bottom:8px;text-decoration:none;color:var(--ink)}
+.mcall b{display:block;font-size:14px;line-height:1.35}.mcall small{color:var(--muted);font-size:12.5px}
+.mcall .go{font-weight:700;color:var(--brand-strong);font-size:14px}
+:root[data-theme="dark"] .mcall .go{color:var(--brand)}

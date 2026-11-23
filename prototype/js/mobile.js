@@ -150,6 +150,16 @@ function sheetView(){
     <button class="mbtn primary block" style="width:100%" data-act="escSend" data-first ${e.phase === 'sending' ? 'disabled' : ''}>${e.phase === 'sending' ? '<span class="spin"></span>กำลังส่ง…' : icon('send', 20) + 'ยืนยันและส่ง'}</button>
     <button class="mbtn block" style="width:100%;margin-top:8px;min-height:48px" data-act="sheetClose" ${e.phase === 'sending' ? 'disabled' : ''}>กลับไปแก้ไข</button></div></div>`;
   }
+  if (sh === 'fail'){
+    const e = S.mob.esc, calls = [...e.recips.map(k => ({ name:PEOPLE[k].who + ' · ' + PEOPLE[k].name, tel:PEOPLE[k].tel })), DUTY];
+    return `<div class="sheet-scrim center"><div class="sheet modal-fail" role="alertdialog" aria-modal="true" aria-labelledby="sh-t" aria-describedby="sh-d">
+    <div class="mf-ic">${icon('tri', 30)}</div><h3 id="sh-t">ส่งอีเมลยกระดับไม่สำเร็จ</h3>
+    <p id="sh-d">ผู้รับ <b>ยังไม่ได้รับ</b>เรื่องนี้ เก็บข้อความเป็นฉบับร่างไว้ให้แล้ว หากเรื่องเร่งด่วน โทรแจ้งผู้เกี่ยวข้องโดยตรงได้เลย</p>
+    <button class="mbtn primary block" style="width:100%" data-act="escRetry" data-first>${icon('refresh', 20)}ลองส่งใหม่</button>
+    <div class="es-sec" style="margin-top:14px">หรือโทรแจ้งโดยตรง</div>
+    ${calls.map(c => `<a class="mcall" href="tel:${c.tel.replace(/-/g, '')}" data-act="callTap" data-v="${esc(c.name)}">${icon('call', 20)}<span style="flex:1;min-width:0"><b>${esc(c.name)}</b><small class="num">${c.tel}</small></span><span class="go">โทร</span></a>`).join('')}
+    <button class="mbtn block" style="width:100%;margin-top:6px;min-height:48px" data-act="sheetClose">ปิด · ดูฉบับร่าง</button></div></div>`;
+  }
   return '';
 }
 
@@ -171,6 +181,8 @@ Object.assign(A, {
     if (e.aid !== a.id || e.phase === 'sent') Object.assign(e, { aid:a.id, recips:[...a.recips], text:escText(a), phase:'compose', caseId:null });
     m.screen = 'escalate'; renderMob();
   },
+  escRetry(){ const m = S.mob; m.sheet = 'confirm'; renderMob(); A.escSend(); },
+  callTap(el, e){ e.preventDefault(); toast('ต้นแบบ: โทรหา ' + el.dataset.v); },
   escBack(){ S.mob.screen = 'alert'; renderMob(); },
   togRc(el){ const e = S.mob.esc, k = el.dataset.v; e.recips = e.recips.includes(k) ? e.recips.filter(x => x !== k) : [...e.recips, k]; renderMob(); },
   escReview(){ const e = S.mob.esc; if (!e.recips.length) return toast('เลือกผู้รับอย่างน้อย 1 รายการ', { kind:'error' }); S.mob.sheet = 'confirm'; S.mob._sheetFocus = true; renderMob(); },
@@ -178,7 +190,7 @@ Object.assign(A, {
     const m = S.mob, e = m.esc; if (e.phase === 'sending') return;
     e.phase = 'sending'; renderMob();
     setTimeout(() => {
-      if (S.demo.sendFail){ e.phase = 'failed'; m.sheet = null; renderMob(); announce('ส่งไม่สำเร็จ เก็บเป็นฉบับร่างแล้ว'); return; }
+      if (S.demo.sendFail){ e.phase = 'failed'; m.sheet = 'fail'; m._sheetFocus = true; renderMob(); announce('ส่งอีเมลยกระดับไม่สำเร็จ เก็บเป็นฉบับร่างแล้ว โทรประสานงานได้'); return; }
       const a = getA(m.aid); a.state = 'escalated';
       e.phase = 'sent'; e.sentAt = '14:31 น.'; e.caseId = 'C-2569-0' + (15 + S.cases.filter(c => c.esc).length);
       S.cases.unshift({ id:e.caseId, title:a.title, type:'ยกระดับ', owner:'บอส', esc:true, to:e.recips.map(k => PEOPLE[k].name).join(', '), age:'เมื่อสักครู่' });
