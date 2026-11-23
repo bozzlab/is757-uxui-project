@@ -83,7 +83,7 @@ function sparkline(){
 
 /* 3) ยกระดับ — ขั้นตอนเดียว: ผู้รับ → สรุป → ยืนยัน → ส่งแล้ว */
 function escText(a){
-  return `หัวข้ออีเมล: [ยกระดับ · ${SEV[a.sev].label}] ${a.title}\n• ตรวจพบ ${clock(a.ago)} — ${num(a.mph)} โพสต์/ชม. (${a.big} ของปกติ)${a.off ? ' · นอก watchlist' : ''}\n• โพสต์เกินเกณฑ์ engagement ${a.hi} โพสต์ · FB ${a.mix.fb}% · X ${a.mix.x}% · TikTok ${a.mix.tt}%\n• ข้อควรระวัง: TikTok ล่าช้า ~25 นาที / ค่านี้เป็นประมาณการของระบบ\n• รายละเอียด: social-listening.example/a/${a.id.toUpperCase()}-1042\nส่งโดย คุณใบเตย · ฝ่ายสื่อสาร`;
+  return `หัวข้ออีเมล: [ยกระดับ · ${SEV[a.sev].label}] ${a.title}\n• ตรวจพบ ${clock(a.ago)} — ${num(a.mph)} โพสต์/ชม. (${a.big} ของปกติ)${a.off ? ' · นอก watchlist' : ''}\n• โพสต์เกินเกณฑ์ engagement ${a.hi} โพสต์ · FB ${a.mix.fb}% · X ${a.mix.x}% · TikTok ${a.mix.tt}%\n• ข้อควรระวัง: TikTok ล่าช้า ~25 นาที / ค่านี้เป็นประมาณการของระบบ\n• รายละเอียด: social-listening.example/a/${a.id.toUpperCase()}-1042\nส่งโดย คุณบอส · ฝ่ายสื่อสาร`;
 }
 function mEscalate(){
   const m = S.mob, e = m.esc, a = getA(m.aid), ph = e.phase;
@@ -181,7 +181,7 @@ Object.assign(A, {
       if (S.demo.sendFail){ e.phase = 'failed'; m.sheet = null; renderMob(); announce('ส่งไม่สำเร็จ เก็บเป็นฉบับร่างแล้ว'); return; }
       const a = getA(m.aid); a.state = 'escalated';
       e.phase = 'sent'; e.sentAt = '14:31 น.'; e.caseId = 'C-2569-0' + (15 + S.cases.filter(c => c.esc).length);
-      S.cases.unshift({ id:e.caseId, title:a.title, type:'ยกระดับ', owner:'ใบเตย', esc:true, to:e.recips.map(k => PEOPLE[k].name).join(', '), age:'เมื่อสักครู่' });
+      S.cases.unshift({ id:e.caseId, title:a.title, type:'ยกระดับ', owner:'บอส', esc:true, to:e.recips.map(k => PEOPLE[k].name).join(', '), age:'เมื่อสักครู่' });
       m.sheet = null; renderMob(); announce('ส่งแล้ว');
     }, S.demo.slow ? 2200 : 1000);
   },

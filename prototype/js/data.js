@@ -87,7 +87,7 @@ const MENTIONS = [
   { id:'f1', plat:'fb', src:'social', handle:'FB-fa11', real:'@refund.center.th', ago:150, eng:2210, sys:'neg', conf:78, topic:'fakeweb',
     fake:{ type:'เว็บปลอม', step:1 },
     text:'ลงทะเบียนรับเงินคืนผู้เสียหายบัตรเครดิตที่เว็บนี้ได้เลย (ลิงก์ชื่อคล้ายหน่วยงาน) กรอกเลขบัตรประชาชนและรหัส OTP',
-    kw:['รับเงินคืน','OTP','กรอกเลขบัตร'], comments:['ระวังมิจฉาชีพ!','เว็บนี้ไม่ใช่ของจริงนะ'], status:'forward', assignee:'ใบเตย', tags:['เว็บปลอม'] },
+    kw:['รับเงินคืน','OTP','กรอกเลขบัตร'], comments:['ระวังมิจฉาชีพ!','เว็บนี้ไม่ใช่ของจริงนะ'], status:'forward', assignee:'บอส', tags:['เว็บปลอม'] },
   { id:'f2', plat:'tt', src:'social', handle:'TT-fa22', real:'@urgent.news.24', ago:300, eng:7400, sys:'neg', conf:81, topic:'fakeweb',
     fake:{ type:'ข่าวบิดเบือน', step:0 },
     text:'ด่วน! หน่วยงานจะอายัดบัญชีทุกคนที่ไม่ได้ยืนยันตัวตนภายใน 24 ชม. รีบแชร์ให้ครอบครัว',
@@ -147,7 +147,7 @@ const TOPICS = [
 ];
 
 const CASES_SEED = [
-  { id:'C-2569-014', title:'เว็บปลอมแอบอ้างหน่วยงาน (ลิงก์รับเงินคืน)', type:'เว็บปลอม', owner:'ใบเตย', step:1, age:'2 ชม. 30 น.', mention:'f1' },
+  { id:'C-2569-014', title:'เว็บปลอมแอบอ้างหน่วยงาน (ลิงก์รับเงินคืน)', type:'เว็บปลอม', owner:'บอส', step:1, age:'2 ชม. 30 น.', mention:'f1' },
   { id:'C-2569-013', title:'ข่าวบิดเบือน: ธนบัตรรุ่นใหม่ใช้ไม่ได้', type:'ข่าวบิดเบือน', owner:'ภูผา', step:2, age:'7 ชม.', mention:'f3' },
   { id:'C-2569-012', title:'ข่าวบิดเบือน: อายัดบัญชีทุกคนใน 24 ชม.', type:'ข่าวบิดเบือน', owner:'ภูผา', step:0, age:'5 ชม.', mention:'f2' },
 ];

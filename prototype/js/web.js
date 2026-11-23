@@ -46,7 +46,7 @@ function webShell(){
     <nav class="w-nav" aria-label="มุมมองที่บันทึก">
       ${w.views.map(v => `<button data-act="applyView" data-v="${v.id}" ${w.view === v.id && w.route === 'dashboard' ? 'aria-current="page"' : ''} style="min-height:38px;font-size:13.5px">${icon('eye', 17)}<span class="lb">${esc(v.name)}</span></button>`).join('')}
     </nav>
-    <div class="w-team"><span class="avatar" aria-hidden="true">ใ</span><div><b>คุณใบเตย</b><small>${ROLE}</small></div></div>
+    <div class="w-team"><span class="avatar" aria-hidden="true">บ</span><div><b>คุณบอส</b><small>${ROLE}</small></div></div>
   </aside>
   <section class="w-main">
     <header class="w-top">
@@ -259,7 +259,7 @@ function detail(m){
   <div class="d-eng"><span><b>${num(m.eng)}</b> engagement</span><span><b>${num(likes)}</b> ไลก์</span><span><b>${num(cms)}</b> คอมเมนต์</span><span><b>${num(shr)}</b> แชร์</span></div>
   ${m.src === 'news' ? '' : `<div class="pri"><span class="lk">${icon('lock', 17)}</span><div style="flex:1">${revealed ? `<b>ผู้โพสต์: ${esc(m.real)}</b><br><span class="hint">เปิดดูเมื่อ 14:30 น. · บันทึกใน audit log แล้ว</span>` : `<b>ผู้โพสต์: ซ่อนไว้ตามค่าเริ่มต้น (PDPA)</b><br><span class="hint">ระบบวิเคราะห์ระดับประเด็น ไม่ได้เฝ้าติดตามรายบุคคล</span>`}</div>
     ${revealed ? '' : `<button class="btn sm" data-act="revealOpen" data-v="${m.id}" ${ro ? 'aria-disabled="true" title="ทีมของคุณไม่ได้รับสิทธิ์เปิดดูตัวตน"' : ''}>${icon('eye', 14)}เปิดดูตัวตน</button>`}</div>`}
-  ${m.fix ? `<div class="corrected" role="status"><div class="ba"><b>${icon('checkc', 18)} แก้ผลแล้ว</b>${sentBadge(m.fix.orig)}${icon('cr', 14)}${sentBadge(m.fix.to)}<span class="hint">เหตุผล: ${REASONS.find(r => r.id === m.fix.reason).label} · โดย คุณใบเตย ${m.fix.at}</span></div>
+  ${m.fix ? `<div class="corrected" role="status"><div class="ba"><b>${icon('checkc', 18)} แก้ผลแล้ว</b>${sentBadge(m.fix.orig)}${icon('cr', 14)}${sentBadge(m.fix.to)}<span class="hint">เหตุผล: ${REASONS.find(r => r.id === m.fix.reason).label} · โดย คุณบอส ${m.fix.at}</span></div>
     <div class="nx">${icon('spark', 16)}<span><b>ระบบจะนำไปปรับ:</b> บันทึกเป็นตัวอย่างสอนโมเดล รอบอัปเดตคืนนี้ 02:00 น. และจะจัดโพสต์ลักษณะเดียวกันอีก ~3 รายการใหม่ ผลใน Dashboard ปรับแล้วทันที</span></div>
     <div class="ac"><button class="btn sm" data-act="undoFix" data-v="${m.id}">${icon('undo', 14)}ยกเลิกการแก้</button></div></div>` : ''}
   <section class="ev" aria-label="หลักฐานเบื้องหลังผลวิเคราะห์"><div class="ev-h">${icon('spark', 17)}หลักฐานเบื้องหลังผลวิเคราะห์ความรู้สึก<span class="hint" style="margin-left:auto;font-weight:400">โดย AI · ประมาณการ</span></div>
@@ -274,7 +274,7 @@ function detail(m){
   ${m.fake ? `<div class="sect">ติดตามเคส · ${m.fake.type}</div><div class="step4" aria-label="ขั้นตอนเคส">${CASE_STEPS.map((t, i) => `<div class="${i <= m.fake.step ? 'on' : ''} ${i === m.fake.step ? 'cur' : ''}">${t}</div>`).join('')}</div><div style="margin-top:6px"><button class="btn sm" data-act="fakeNext" data-v="${m.id}" ${m.fake.step >= 3 ? 'disabled' : ''}>${m.fake.step >= 3 ? 'ปิดเคสแล้ว' : 'ไปขั้น “' + CASE_STEPS[m.fake.step + 1] + '”'} ${m.fake.step < 3 ? icon('cr', 14) : ''}</button></div>` : ''}
   <div class="sect">งานในทีม</div>
   <div class="work"><div><label>สถานะ</label><div class="seg" role="group" aria-label="สถานะ">${Object.keys(STATUS).map(k => `<button data-act="setStatus" data-v="${k}" data-id="${m.id}" aria-pressed="${m.status === k}" ${ro ? 'aria-disabled="true"' : ''}>${STATUS[k]}</button>`).join('')}</div></div>
-    <div><label for="asg">ผู้รับผิดชอบ</label><select id="asg" class="sel" style="width:100%" data-act="assign" data-id="${m.id}"><option value="">ยังไม่มอบหมาย</option>${['ใบเตย', 'ภูผา'].map(p => `<option ${m.assignee === p ? 'selected' : ''}>${p}</option>`).join('')}</select></div></div>
+    <div><label for="asg">ผู้รับผิดชอบ</label><select id="asg" class="sel" style="width:100%" data-act="assign" data-id="${m.id}"><option value="">ยังไม่มอบหมาย</option>${['บอส', 'ภูผา'].map(p => `<option ${m.assignee === p ? 'selected' : ''}>${p}</option>`).join('')}</select></div></div>
   <label style="font-size:12px;color:var(--muted);font-weight:600;display:block;margin-bottom:5px">แท็ก</label>
   <div class="tagrow">${['ภัยไซเบอร์', 'ต้องชี้แจง', 'เฝ้าดูต่อ', 'ข่าวปลอม'].map(t => `<button class="chip" data-act="tag" data-v="${t}" data-id="${m.id}" aria-pressed="${m.tags.includes(t)}">${icon('tag', 13)}${t}</button>`).join('')}</div>
   </div>`;
@@ -405,7 +405,7 @@ Object.assign(A, {
   /* PDPA */
   revealOpen(el){ if (S.demo.noEdit) return toast('ทีมของคุณไม่ได้รับสิทธิ์เปิดดูตัวตน', { kind:'error' }); S.web.reveal = { id:el.dataset.v, reason:'', done:S.web.reveal.done }; S.web.modal = 'reveal'; renderWeb({ openModal:true, keepDet:true }); },
   pickRev(el){ S.web.reveal.reason = el.dataset.v; renderWeb({ keepDet:true }); },
-  doReveal(){ const r = S.web.reveal; if (!r.reason) return; r.done[r.id] = true; S.audit.unshift({ who:'คุณใบเตย', post:'โพสต์ ' + r.id.toUpperCase(), why:r.reason, at:'14:30 น.' }); S.web.modal = null; renderWeb({ keepDet:true }); toast('เปิดดูตัวตนแล้ว · บันทึกใน audit log'); },
+  doReveal(){ const r = S.web.reveal; if (!r.reason) return; r.done[r.id] = true; S.audit.unshift({ who:'คุณบอส', post:'โพสต์ ' + r.id.toUpperCase(), why:r.reason, at:'14:30 น.' }); S.web.modal = null; renderWeb({ keepDet:true }); toast('เปิดดูตัวตนแล้ว · บันทึกใน audit log'); },
   closeModal(){ S.web.modal = null; renderWeb({ keepDet:true }); },
   scrim(el, e){ if (e.target === el) A.closeModal(); },
   /* ตั้งค่า */
