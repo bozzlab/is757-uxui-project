@@ -5,7 +5,9 @@ function renderMob(){
   let inner;
   if (sc === 'lock') inner = lockView();
   else {
-    const body = { alerts: mAlerts, alert: mAlertDetail, escalate: mEscalate, feed: mFeed, post: mPost, summary: mSummary, cases: mCases }[sc]();
+    const dataScr = ['alerts', 'alert', 'feed', 'post', 'summary', 'cases'].includes(sc);
+    const body = dataScr && S.demo.error ? mError(sc) : dataScr && m.loading ? mSkel(sc)
+      : { alerts: mAlerts, alert: mAlertDetail, escalate: mEscalate, feed: mFeed, post: mPost, summary: mSummary, cases: mCases }[sc]();
     const showTabs = ['alerts', 'feed', 'summary', 'cases'].includes(sc);
     inner = `<div class="m-status" aria-hidden="true"><span class="num">14:30</span><span>${icon('wifi', 16)}<svg width="26" height="13" viewBox="0 0 26 13" aria-hidden="true"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor"/><rect x="2" y="2" width="16" height="9" rx="2" fill="currentColor"/><rect x="23.5" y="4" width="2" height="5" rx="1" fill="currentColor"/></svg></span></div>
     <div class="m-body">${body}${m.sheet ? sheetView() : ''}</div>${showTabs ? tabbar() : ''}`;
@@ -14,6 +16,27 @@ function renderMob(){
   const sh = $('.sheet [data-first]', root); if (sh && m._sheetFocus){ sh.focus(); m._sheetFocus = false; }
 }
 const mt = () => S.mob;
+/* สถานะโหลด / ผิดพลาดบนมือถือ (ผูกกับสถานะจำลอง "ข้อมูลโหลดไม่สำเร็จ" และ "เครือข่ายช้า") */
+const M_TITLES = { alerts:'แจ้งเตือน', feed:'ฟีด', summary:'สรุป', cases:'เคส / ติดตาม', alert:'แจ้งเตือน', post:'โพสต์' };
+const mNavBar = sc => ['alert', 'post'].includes(sc)
+  ? `<div class="m-nav"><button class="m-icon" data-act="mback" aria-label="กลับ">${icon('cl', 24)}</button><div class="t">${M_TITLES[sc]}</div><span class="m-icon" aria-hidden="true"></span></div>`
+  : `<div class="m-hd"><h1>${M_TITLES[sc]}</h1></div>`;
+function mSkel(sc){
+  return `${mNavBar(sc)}<div class="m-scroll" role="status" aria-label="กำลังโหลดข้อมูล">
+    ${'<div class="skel" style="height:96px;margin-bottom:10px;border-radius:16px"></div>'.repeat(sc === 'alert' ? 1 : 3)}
+    ${sc === 'alert' ? '<div class="skel" style="height:140px;margin-bottom:10px;border-radius:16px"></div><div class="skel" style="height:56px;border-radius:15px"></div>' : ''}
+    <p class="hint" style="text-align:center;margin:12px 0 0">กำลังโหลดข้อมูล…</p></div>`;
+}
+function mError(sc){
+  return `${mNavBar(sc)}<div class="m-scroll"><div class="errbox" role="alert"><div class="ill">${icon('tri', 26)}</div><b>โหลดข้อมูลไม่สำเร็จ</b>
+    <span>การเชื่อมต่อขัดข้อง ข้อมูลที่เห็นก่อนหน้านี้ยังไม่ถูกลบ</span>
+    <button class="mbtn brand" style="padding:0 22px" data-act="mretry">${icon('refresh', 18)}ลองใหม่</button></div></div>`;
+}
+function mLoad(ms = 0){
+  const m = S.mob, d = S.demo.slow ? SLOW_MS : ms; if (!d) return;
+  m.loading = true; clearTimeout(mLoad.t);
+  mLoad.t = setTimeout(() => { m.loading = false; renderMob(); announce('โหลดข้อมูลเสร็จแล้ว'); }, d);
+}
 function tabbar(){
   const m = S.mob, n = S.alerts.filter(a => a.state === 'new').length;
   const T = [['alerts', 'bell', 'แจ้งเตือน'], ['feed', 'feed', 'ฟีด'], ['summary', 'chart', 'สรุป'], ['cases', 'folder', 'เคส']];
@@ -173,11 +196,12 @@ function sheetView(){
 /* ================= Actions (มือถือ) ================= */
 function mUpdate(extra){ renderMob(); if (extra) extra(); }
 Object.assign(A, {
-  mtab(el){ const m = S.mob; m.tab = el.dataset.v; m.screen = el.dataset.v; m.sheet = null; renderMob(); },
+  mtab(el){ const m = S.mob; m.tab = el.dataset.v; m.screen = el.dataset.v; m.sheet = null; mLoad(); renderMob(); },
+  mretry(){ S.demo.error = false; syncDemo(); mLoad(900); renderMob(); },
   mseg(el){ S.mob.seg = el.dataset.v; renderMob(); },
-  mback(){ const m = S.mob; m.sheet = null; m.screen = m.screen === 'post' ? 'feed' : 'alerts'; m.tab = m.screen; renderMob(); },
-  openAlert(el){ const m = S.mob; m.aid = el.dataset.v; m.screen = 'alert'; m.tab = 'alerts'; renderMob(); announce('เปิดรายละเอียดแจ้งเตือน'); },
-  openPost(el){ S.mob.mid = el.dataset.v; S.mob.screen = 'post'; renderMob(); },
+  mback(){ const m = S.mob; m.sheet = null; m.screen = m.screen === 'post' ? 'feed' : 'alerts'; m.tab = m.screen; mLoad(); renderMob(); },
+  openAlert(el){ const m = S.mob; m.aid = el.dataset.v; m.screen = 'alert'; m.tab = 'alerts'; mLoad(); renderMob(); announce('เปิดรายละเอียดแจ้งเตือน'); },
+  openPost(el){ S.mob.mid = el.dataset.v; S.mob.screen = 'post'; mLoad(); renderMob(); },
   ack(el){ const a = getA(el.dataset.v); a.state = 'ack'; renderMob(); toast('รับทราบแล้ว — ทีมเห็นสถานะนี้'); announce('รับทราบแล้ว'); },
   watchOpen(){ S.mob.sheet = 'watch'; S.mob._sheetFocus = true; renderMob(); },
   doWatch(el){ const a = getA(S.mob.aid); a.state = 'watch'; S.mob.snooze = { id:a.id, at:el.dataset.v }; S.mob.sheet = null; renderMob(); toast('เฝ้าดู — จะเตือนอีกครั้ง ' + el.dataset.v); },
