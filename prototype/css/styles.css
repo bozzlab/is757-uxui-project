@@ -48,6 +48,10 @@ a{color:var(--brand)}
 .cases{display:flex;gap:6px;margin-left:8px}
 .cs{padding:7px 12px;border-radius:999px;font-size:13px;font-weight:600;color:#B9CBD1;border:1px solid #234550;display:flex;gap:7px;align-items:center;min-height:36px}
 .cs[aria-pressed="true"]{background:#E8F0F2;color:#0A1A22;border-color:#E8F0F2}
+a.cs{text-decoration:none;border-style:dashed;flex:none}a.cs:hover{background:#12262e;color:#fff}
+@media (max-width:1600px){a.cs .wf-lbl{display:none}a.cs{padding:7px 10px}}
+.steps{justify-content:safe center}
+@media (min-width:641px) and (max-width:1680px){.step span{display:none}.step[aria-current="step"] span{display:inline}}
 .steps{display:flex;gap:6px;align-items:center;flex:1;justify-content:center;min-width:0}
 .step{display:flex;align-items:center;gap:8px;padding:5px 12px 5px 6px;border-radius:999px;font-size:13px;color:#B9CBD1;border:1px solid transparent;white-space:nowrap;min-height:36px}
 .step b{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:12px;background:#17313b;color:#D9E7EA}

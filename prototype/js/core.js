@@ -6,6 +6,7 @@ const num = n => Number(n).toLocaleString('th-TH');
 const clone = o => JSON.parse(JSON.stringify(o));
 
 const ICONS = {
+  frame:'<path d="M8 3v18M16 3v18M3 8h18M3 16h18"/>',
   bell:'<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
   dash:'<rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/>',
   feed:'<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',

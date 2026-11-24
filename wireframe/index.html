@@ -1,0 +1,873 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Social Listening — Wireframe</title>
+<meta name="description" content="UX Journey และ Wireframe ของ Social Listening: มือถือ, เว็บ Mention Feed และ Dashboard แบบ step-by-step">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%230B6B6F'/%3E%3Cpath d='M11 6v20M21 6v20M6 11h20M6 21h20' stroke='white' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ui:#FFFFFF; --ui-2:#F5F5F5; --ui-3:#E9E9E9; --ui-line:#E6E6E6; --ui-ink:#1E1E1E; --ui-mut:#757575;
+  --canvas:#F5F5F5; --dot:#D2D2D2; --label:#8A8A8A; --sec-bg:rgba(255,255,255,.55); --sec-line:#D9D9D9; --sec-ink:#3B3B3B;
+  --sel:#0D99FF; --sel-soft:rgba(13,153,255,.12); --proto:#0D99FF; --comp:#9747FF;
+  --c-mob:#9747FF; --c-feed:#0D99FF; --c-dash:#14AE5C; --c-sys:#8C8C8C;
+  --font:'Noto Sans Thai','Inter',system-ui,-apple-system,sans-serif; --ui-font:'Inter','Noto Sans Thai',system-ui,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ui:#2C2C2C; --ui-2:#383838; --ui-3:#444; --ui-line:#3D3D3D; --ui-ink:#FFFFFF; --ui-mut:#B3B3B3;
+    --canvas:#1E1E1E; --dot:#363636; --label:#9A9A9A; --sec-bg:rgba(44,44,44,.6); --sec-line:#3A3A3A; --sec-ink:#E6E6E6;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --ui:#2C2C2C; --ui-2:#383838; --ui-3:#444; --ui-line:#3D3D3D; --ui-ink:#FFFFFF; --ui-mut:#B3B3B3;
+  --canvas:#1E1E1E; --dot:#363636; --label:#9A9A9A; --sec-bg:rgba(44,44,44,.6); --sec-line:#3A3A3A; --sec-ink:#E6E6E6;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--canvas);color:var(--ui-ink);font-family:var(--ui-font);font-size:12px;overflow:hidden;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--sel);outline-offset:1px;border-radius:4px}
+.i{width:16px;height:16px;flex:none}
+
+/* ---------- Figma-like chrome ---------- */
+#app{display:grid;grid-template-rows:48px 1fr;grid-template-columns:240px 1fr 272px;height:100%}
+.tb{grid-column:1/-1;display:flex;align-items:center;gap:6px;padding:0 8px;background:var(--ui);border-bottom:1px solid var(--ui-line);z-index:5;min-width:0}
+.tbtn{height:32px;min-width:32px;padding:0 8px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;gap:6px;color:var(--ui-ink)}
+.tbtn:hover{background:var(--ui-2)}
+.tbtn[aria-pressed="true"]{background:var(--sel);color:#fff}
+.logo{width:32px;height:32px;border-radius:8px;display:grid;place-items:center;background:linear-gradient(145deg,#12979A,#0B6B6F);color:#fff}
+.file{display:flex;flex-direction:column;line-height:1.25;margin:0 8px;min-width:0}
+.file b{font-weight:600;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.file span{color:var(--ui-mut);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb .grow{flex:1}
+.tools{display:flex;gap:2px;padding:2px;border-radius:8px}
+.zoom{display:flex;align-items:center;gap:0;border-radius:6px}
+.zoom .pct{min-width:52px;font-variant-numeric:tabular-nums;font-weight:500}
+.play{background:var(--sel);color:#fff;height:32px;border-radius:6px;padding:0 12px;display:inline-flex;align-items:center;gap:6px;font-weight:600;white-space:nowrap}
+.play:hover{filter:brightness(1.08)}
+.vsep{width:1px;height:24px;background:var(--ui-line);margin:0 4px}
+
+.panel{background:var(--ui);overflow:auto;z-index:4;min-height:0;grid-row:2}
+.lp{grid-column:1}.rp{grid-column:3}#cv{grid-column:2;grid-row:2}
+.lp{border-right:1px solid var(--ui-line)}
+.rp{border-left:1px solid var(--ui-line)}
+.ph{display:flex;align-items:center;justify-content:space-between;padding:12px 12px 6px;font-weight:600;font-size:11px;color:var(--ui-ink)}
+.ph small{color:var(--ui-mut);font-weight:500}
+.pg{display:flex;align-items:center;gap:8px;padding:6px 12px;margin:0 6px;border-radius:6px;font-weight:500}
+.pg.on{background:var(--ui-2)}
+.hr{height:1px;background:var(--ui-line);margin:8px 0}
+.ly{display:flex;align-items:center;gap:6px;width:calc(100% - 12px);margin:0 6px;padding:5px 8px;border-radius:6px;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-height:28px}
+.ly:hover{background:var(--ui-2)}
+.ly.on{background:var(--sel-soft);color:var(--ui-ink)}
+.ly.on .i{color:var(--sel)}
+.ly.lsec{font-weight:600}
+.ly.ch{padding-left:28px}
+.ly .i{color:var(--ui-mut);width:14px;height:14px}
+.ly span{overflow:hidden;text-overflow:ellipsis}
+
+.rp .blk{padding:12px;border-bottom:1px solid var(--ui-line)}
+.rp h3{margin:0 0 8px;font-size:11px;font-weight:600}
+.rp p{margin:0 0 6px;line-height:1.55;color:var(--ui-ink);font-family:var(--font);font-size:12.5px}
+.rp .mut{color:var(--ui-mut)}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 10px;font-variant-numeric:tabular-nums}
+.kv span{color:var(--ui-mut)}
+.tags{display:flex;flex-wrap:wrap;gap:4px}
+.tag{border:1px solid var(--ui-line);background:var(--ui-2);border-radius:4px;padding:1px 6px;font-size:11px;font-weight:500}
+.dev{display:inline-flex;align-items:center;gap:5px;border-radius:4px;padding:1px 7px;font-size:11px;font-weight:600;color:#fff}
+.notes{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.notes li{display:flex;gap:8px;font-family:var(--font);font-size:12.5px;line-height:1.5}
+.notes b.n{flex:none;width:20px;height:20px;border-radius:50% 50% 50% 2px;background:#F24822;color:#fff;font:700 10.5px var(--ui-font);display:grid;place-items:center}
+.btn-r{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;height:32px;border-radius:6px;background:var(--sel);color:#fff;font-weight:600;margin-top:4px}
+.btn-o{display:flex;align-items:center;justify-content:center;gap:6px;height:32px;border-radius:6px;border:1px solid var(--ui-line);font-weight:500;flex:1}
+.btn-o:hover{background:var(--ui-2)}
+.flow{display:flex;align-items:center;gap:8px;padding:8px;border-radius:6px;border:1px solid var(--ui-line);margin-bottom:6px;font-family:var(--font)}
+.flow:hover{background:var(--ui-2)}
+.flow .fi{width:24px;height:24px;border-radius:6px;background:var(--sel);color:#fff;display:grid;place-items:center;flex:none}
+.flow b{display:block;font-size:12.5px}
+.flow small{color:var(--ui-mut)}
+kbd{font:500 11px var(--ui-font);background:var(--ui-2);border:1px solid var(--ui-line);border-radius:4px;padding:0 5px}
+.keys{display:grid;grid-template-columns:1fr auto;gap:6px;font-family:var(--font);font-size:12px}
+.keys span:nth-child(even){text-align:right}
+
+/* ---------- canvas ---------- */
+#cv{position:relative;overflow:hidden;background-color:var(--canvas);background-image:radial-gradient(var(--dot) 1px,transparent 1.2px);touch-action:none;cursor:default;min-width:0;min-height:0}
+#cv.hand,#cv.grab{cursor:grab}
+#cv.grabbing{cursor:grabbing}
+#world{position:absolute;left:0;top:0;transform-origin:0 0;font-family:var(--font)}
+.sec{position:absolute;background:var(--sec-bg);border:1px solid var(--sec-line);border-radius:6px}
+.sec-t{position:absolute;left:0;top:-34px;display:flex;align-items:center;gap:8px;font:600 15px var(--ui-font);color:var(--sec-ink);white-space:nowrap}
+.sec-t i{font-style:normal;background:var(--ui-ink);color:var(--canvas);border-radius:5px;padding:2px 8px;font-size:13px}
+.sec-h{position:absolute;left:40px;top:28px;right:40px;display:flex;align-items:flex-start;gap:24px;color:var(--sec-ink)}
+.sec-h h2{margin:0;font-size:30px;line-height:1.2;font-weight:700}
+.sec-h p{margin:4px 0 0;font-size:16px;color:var(--label);max-width:1100px}
+.fl{position:absolute;font:500 13px var(--ui-font);color:var(--label);white-space:nowrap;cursor:pointer;display:flex;gap:6px;align-items:center}
+.fl.on{color:var(--sel)}
+.fl .dev{font-size:10.5px;padding:0 6px}
+#selbox{position:absolute;border:2px solid var(--sel);pointer-events:none;display:none}
+#selbox i{position:absolute;width:9px;height:9px;background:#fff;border:1.5px solid var(--sel)}
+#selbox i:nth-child(1){left:-5px;top:-5px}#selbox i:nth-child(2){right:-5px;top:-5px}#selbox i:nth-child(3){left:-5px;bottom:-5px}#selbox i:nth-child(4){right:-5px;bottom:-5px}
+#selbox b{position:absolute;left:50%;bottom:-28px;transform:translateX(-50%);background:var(--sel);color:#fff;font:600 12px var(--ui-font);padding:2px 7px;border-radius:4px;white-space:nowrap}
+svg.wires{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
+.plabel{position:absolute;transform:translate(-50%,-50%);background:var(--proto);color:#fff;font:600 13px var(--font);padding:3px 10px;border-radius:999px;white-space:nowrap;box-shadow:0 2px 6px rgba(13,153,255,.35)}
+.jlabel{position:absolute;transform:translate(-50%,-50%);background:var(--canvas);color:var(--label);font:500 12.5px var(--font);padding:1px 8px;border-radius:999px;border:1px dashed var(--sec-line);white-space:nowrap}
+
+/* journey map */
+.jcol{position:absolute;background:var(--ui);border:1px solid var(--sec-line);border-radius:10px;display:flex;flex-direction:column;justify-content:center;padding:0 16px;color:var(--sec-ink)}
+.jcol b{font-size:17px}.jcol span{font-size:13px;color:var(--label)}
+.jcol .no{font:700 12px var(--ui-font);color:var(--label)}
+.jcase{position:absolute;border-radius:8px;display:flex;align-items:center;gap:8px;padding:0 14px;font:600 14px var(--font);color:#fff}
+.jlane{position:absolute;display:flex;flex-direction:column;justify-content:center;gap:4px;padding-left:16px;color:var(--sec-ink);border-left:5px solid}
+.jlane b{font-size:17px}.jlane span{font-size:12.5px;color:var(--label)}
+.jrow{position:absolute;border-top:1px dashed var(--sec-line)}
+.jc{position:absolute;background:var(--ui);border-radius:10px;padding:12px 14px;border:1px solid var(--sec-line);border-top:4px solid;color:var(--sec-ink);cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.06);text-align:left;font-family:var(--font)}
+.jc:hover{box-shadow:0 0 0 2px var(--sel)}
+.jc .r1{display:flex;align-items:center;gap:6px;font:600 11px var(--ui-font);color:var(--label);margin-bottom:4px}
+.jc .st{font:700 11px var(--ui-font);color:#fff;border-radius:4px;padding:1px 6px}
+.jc b{display:block;font-size:15px;line-height:1.35}
+.jc p{margin:3px 0 0;font-size:12.5px;line-height:1.45;color:var(--label)}
+.jc.sys{border-style:dashed;border-top-style:solid;background:transparent;cursor:default}
+.jc.sys:hover{box-shadow:none}
+.legend{display:flex;gap:16px;margin-left:auto;font:500 13px var(--ui-font);color:var(--label);flex-wrap:wrap;padding-top:8px}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend i{width:12px;height:12px;border-radius:3px}
+
+/* stickies */
+.sticky{position:absolute;padding:16px 18px;font-size:15px;line-height:1.5;color:#1E1E1E;box-shadow:0 2px 0 rgba(0,0,0,.06),0 8px 16px -8px rgba(0,0,0,.25);font-family:var(--font)}
+.sticky small{display:block;font:700 11px var(--ui-font);letter-spacing:.5px;text-transform:uppercase;opacity:.6;margin-bottom:6px}
+.sticky.y{background:#FFE299}.sticky.g{background:#AFF4C6}.sticky.p{background:#FFC7C2}.sticky.b{background:#BDE3FF}
+.sticky small b{font-weight:700}
+
+/* sitemap */
+.node{position:absolute;border:1.5px solid #2B2B2B;background:#fff;color:#2B2B2B;border-radius:8px;display:flex;align-items:center;gap:8px;padding:0 12px;font-size:13.5px;font-weight:500;white-space:nowrap;overflow:hidden}
+.node.root{background:#2B2B2B;color:#fff;font-weight:700;font-size:16px;justify-content:center}
+.node.l1{font-weight:700;font-size:14.5px;border-width:2px}
+.node.go{cursor:pointer}
+.node.go:hover{box-shadow:0 0 0 2px var(--sel)}
+.node .st{font:700 10.5px var(--ui-font);background:var(--proto);color:#fff;border-radius:4px;padding:0 5px;margin-left:auto}
+.node .dot{width:8px;height:8px;border-radius:50%;flex:none}
+
+/* component set */
+.cset{position:absolute;border:1.5px dashed var(--comp);border-radius:6px}
+.cset-t{position:absolute;left:0;top:-26px;color:var(--comp);font:600 13px var(--ui-font);display:flex;gap:6px;align-items:center}
+.var{position:absolute;background:#fff;color:#2B2B2B;overflow:hidden;box-shadow:0 0 0 1px rgba(0,0,0,.08)}
+.var-t{position:absolute;font:500 12px var(--ui-font);color:var(--comp);white-space:nowrap}
+
+/* ---------- lo-fi wireframe primitives (inside frames) ---------- */
+.fr{position:absolute;background:#fff;color:#2B2B2B;overflow:hidden;font-size:12px;line-height:1.45;box-shadow:0 0 0 1px rgba(0,0,0,.08),0 2px 10px rgba(0,0,0,.04);cursor:pointer}
+.row{display:flex;align-items:center;gap:8px}
+.col{display:flex;flex-direction:column;gap:8px}
+.sp{flex:1}
+.wl{height:7px;border-radius:4px;background:#DCDCDC;margin:5px 0}
+.wl.d{background:#B8B8B8}
+.wl.s{height:5px;margin:4px 0}
+.wb{border:1.5px solid #C9C9C9;border-radius:8px;padding:10px}
+.wb.f{background:#F4F4F4;border-color:#F4F4F4}
+.wb.k{border-color:#2B2B2B}
+.btn{display:flex;align-items:center;justify-content:center;gap:6px;height:34px;border:1.5px solid #2B2B2B;border-radius:8px;font-weight:600;font-size:12px;padding:0 10px;white-space:nowrap}
+.btn.p{background:#2B2B2B;color:#fff}
+.btn.g{border-color:#CFCFCF;color:#A0A0A0}
+.btn.sm{height:26px;font-size:11px;border-radius:6px}
+.chip{display:inline-flex;align-items:center;gap:4px;border:1px solid #BDBDBD;border-radius:999px;padding:0 8px;font-size:10.5px;color:#555;white-space:nowrap;line-height:18px}
+.chip.on{background:#2B2B2B;color:#fff;border-color:#2B2B2B}
+.chip.warn{border:1.5px solid #2B2B2B;font-weight:700;color:#2B2B2B}
+.t{font-size:12px}.s{font-size:10.5px;color:#8A8A8A}.h{font-size:16px;font-weight:700;line-height:1.3}.h2{font-size:13px;font-weight:700;line-height:1.35}
+.lbl{font-size:10px;font-weight:700;letter-spacing:.4px;color:#8A8A8A;text-transform:uppercase}
+.mk{background:#FFE58A;border-radius:2px;padding:0 2px}
+.ph-img{background:#EFEFEF url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none' viewBox='0 0 10 10'%3E%3Cpath d='M0 0L10 10M10 0L0 10' stroke='%23CFCFCF' stroke-width='.15'/%3E%3C/svg%3E") center/100% 100%;border-radius:6px}
+.av{width:22px;height:22px;border-radius:50%;background:#D5D5D5;flex:none}
+.ic{width:16px;height:16px;border-radius:4px;background:#CFCFCF;flex:none}
+.sb{display:flex;justify-content:space-between;align-items:center;padding:10px 20px 6px;font:600 12px var(--ui-font)}
+.sb i{display:inline-block;width:22px;height:10px;border:1.5px solid #2B2B2B;border-radius:3px;margin-left:4px;vertical-align:middle;position:relative}
+.sb i:after{content:"";position:absolute;inset:1px 5px 1px 1px;background:#2B2B2B;border-radius:1px}
+.mnav{display:flex;align-items:center;gap:6px;padding:6px 14px 8px;font-weight:600;font-size:13px;border-bottom:1px solid #EEE}
+.tabbar{position:absolute;left:0;right:0;bottom:0;height:58px;border-top:1px solid #E5E5E5;display:flex;justify-content:space-around;align-items:flex-start;padding-top:8px;background:#fff}
+.tabbar span{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:9.5px;color:#9A9A9A}
+.tabbar span i{width:18px;height:18px;border-radius:5px;background:#D0D0D0}
+.tabbar span.on{color:#2B2B2B;font-weight:700}.tabbar span.on i{background:#2B2B2B}
+.bchrome{height:30px;background:#F0F0F0;border-bottom:1px solid #E2E2E2;display:flex;align-items:center;gap:10px;padding:0 12px}
+.bchrome .d{display:flex;gap:5px}.bchrome .d i{width:9px;height:9px;border-radius:50%;background:#CFCFCF}
+.bchrome .u{flex:1;max-width:340px;margin:0 auto;height:18px;border-radius:5px;background:#fff;font:500 10px var(--ui-font);color:#999;display:flex;align-items:center;justify-content:center}
+.wapp{position:absolute;top:30px;left:0;right:0;bottom:0;display:flex}
+.wside{width:150px;border-right:1px solid #ECECEC;padding:12px 10px;display:flex;flex-direction:column;gap:4px;background:#FAFAFA;flex:none}
+.wside .lg{display:flex;align-items:center;gap:6px;font-weight:700;font-size:11.5px;margin-bottom:10px}
+.wside .lg i{width:18px;height:18px;border-radius:5px;background:#2B2B2B}
+.wside .it{display:flex;align-items:center;gap:7px;padding:6px 7px;border-radius:6px;font-size:11px;color:#777}
+.wside .it i{width:13px;height:13px;border-radius:3px;background:#CFCFCF}
+.wside .it.on{background:#2B2B2B;color:#fff;font-weight:600}.wside .it.on i{background:#fff}
+.wside .it em{margin-left:auto;font-style:normal;font-size:9.5px;background:#2B2B2B;color:#fff;border-radius:999px;padding:0 5px}
+.wside .it.on em{background:#fff;color:#2B2B2B}
+.wmain{flex:1;min-width:0;padding:14px 16px;position:relative;display:flex;flex-direction:column;gap:10px}
+.kpi{flex:1;border:1.5px solid #D5D5D5;border-radius:8px;padding:8px 10px}
+.kpi b{display:block;font-size:17px;font-family:var(--ui-font)}
+.pin{position:absolute;width:24px;height:24px;border-radius:50% 50% 50% 3px;background:#F24822;color:#fff;font:700 11.5px var(--ui-font);display:grid;place-items:center;box-shadow:0 2px 6px rgba(242,72,34,.4);z-index:3;transform:translate(-50%,-100%)}
+.hot{position:absolute;border:2px solid var(--proto);border-radius:9px;background:rgba(13,153,255,.08);pointer-events:none;display:none}
+.fr.on .hot{display:block}
+.scrim{position:absolute;inset:0;background:rgba(0,0,0,.38)}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:16px 16px 0 0;padding:10px 16px 18px}
+.grab-h{width:40px;height:4px;border-radius:2px;background:#CFCFCF;margin:0 auto 10px}
+.ck{width:16px;height:16px;border:1.5px solid #2B2B2B;border-radius:4px;flex:none;display:grid;place-items:center;font-size:11px;font-weight:700}
+.ck.on{background:#2B2B2B;color:#fff}
+.rd{width:15px;height:15px;border:1.5px solid #2B2B2B;border-radius:50%;flex:none}
+.rd.on{box-shadow:inset 0 0 0 3px #fff;background:#2B2B2B}
+.stp{display:flex;align-items:center;gap:6px;font-size:10.5px;color:#999}
+.stp b{width:18px;height:18px;border-radius:50%;border:1.5px solid #BDBDBD;display:grid;place-items:center;font:700 10px var(--ui-font)}
+.stp.on{color:#2B2B2B;font-weight:600}.stp.on b{background:#2B2B2B;border-color:#2B2B2B;color:#fff}
+.stp.ok b{background:#fff;border-color:#2B2B2B;color:#2B2B2B}
+.stl{flex:1;height:1.5px;background:#D5D5D5;max-width:30px}
+.fitem{border-bottom:1px solid #EEE;padding:8px 10px;display:flex;gap:8px}
+.fitem.on{background:#F1F1F1;box-shadow:inset 3px 0 0 #2B2B2B}
+.rank{font:700 10px var(--ui-font);color:#999;width:18px;flex:none;padding-top:2px}
+.conf{height:5px;border-radius:3px;background:#E5E5E5;overflow:hidden;width:60px}
+.conf i{display:block;height:100%;background:#7A7A7A}
+.ftabs{display:flex;gap:16px;border-bottom:1px solid #E5E5E5;font-size:11px;color:#8A8A8A}
+.ftabs span{padding:4px 0 7px}
+.ftabs span.on{color:#2B2B2B;font-weight:700;box-shadow:inset 0 -2px 0 #2B2B2B}
+.modal{position:absolute;background:#fff;border-radius:12px;box-shadow:0 20px 50px rgba(0,0,0,.3);padding:16px 18px}
+.toast{position:absolute;background:#2B2B2B;color:#fff;border-radius:10px;padding:8px 12px;display:flex;gap:10px;align-items:center;font-size:11.5px}
+.toast u{font-weight:700;text-decoration:none;color:#FFE58A}
+.skel{background:linear-gradient(90deg,#EEE,#F7F7F7,#EEE);border-radius:6px}
+
+/* ---------- responsive ---------- */
+.only-m{display:none}
+@media (max-width:1100px){
+  #app{grid-template-columns:220px 1fr 0}
+  .rp{position:absolute;right:0;top:48px;bottom:0;width:280px;transform:translateX(100%);transition:transform .2s;box-shadow:-8px 0 24px rgba(0,0,0,.15)}
+  body.has-sel .rp,body.show-info .rp{transform:none}
+}
+@media (max-width:760px){
+  #app{grid-template-columns:0 1fr 0}
+  .lp{position:absolute;left:0;top:48px;bottom:0;width:260px;transform:translateX(-100%);transition:transform .2s;box-shadow:8px 0 24px rgba(0,0,0,.15)}
+  body.show-layers .lp{transform:none}
+  .rp{left:0;right:0;top:auto;width:auto;height:46%;border-left:0;border-top:1px solid var(--ui-line);border-radius:12px 12px 0 0;transform:translateY(100%)}
+  body.has-sel .rp,body.show-info .rp{transform:none}
+  .file span,.hide-m,.vsep{display:none}
+  .only-m{display:inline-flex}
+  .play span{display:none}
+  .play{padding:0 10px}
+  .file{margin:0 4px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div id="app">
+  <header class="tb">
+    <button class="tbtn only-m" data-ui="layers" aria-label="เลเยอร์" title="เลเยอร์"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3 2 8l10 5 10-5-10-5zM2 16l10 5 10-5M2 12l10 5 10-5"/></svg></button>
+    <a class="logo" href="../prototype/" title="กลับไปที่ต้นแบบ" aria-label="กลับไปที่ต้นแบบ"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12.5a7 7 0 0 1 14 0M8.2 15a3.8 3.8 0 0 1 7.6 0M12 18.5h.01M2 9.5a11 11 0 0 1 20 0"/></svg></a>
+    <div class="file"><b>Social Listening · UX Journey</b><span>Wireframe · มือถือ + เว็บ + Dashboard</span></div>
+    <div class="vsep"></div>
+    <div class="tools hide-m" role="group" aria-label="เครื่องมือ">
+      <button class="tbtn" data-ui="tool" data-v="move" aria-pressed="true" title="เลือก (V)" aria-label="เลือก"><svg class="i" viewBox="0 0 24 24" fill="currentColor"><path d="M5 3l14 8-6 1.5L10 19z"/></svg></button>
+      <button class="tbtn" data-ui="tool" data-v="hand" aria-pressed="false" title="เลื่อน (H / Space)" aria-label="เลื่อน"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-4 0M14 10V4a2 2 0 0 0-4 0v2M10 10.5V6a2 2 0 0 0-4 0v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg></button>
+    </div>
+    <div class="grow"></div>
+    <div class="zoom" role="group" aria-label="ซูม">
+      <button class="tbtn" data-ui="zout" aria-label="ซูมออก" title="ซูมออก (−)"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/></svg></button>
+      <button class="tbtn pct" data-ui="fit" id="pct" title="พอดีทั้งหมด (Shift+1)">100%</button>
+      <button class="tbtn" data-ui="zin" aria-label="ซูมเข้า" title="ซูมเข้า (+)"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+    </div>
+    <button class="tbtn" data-ui="theme" aria-label="สลับโหมดมืด/สว่าง" title="โหมดมืด/สว่าง"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></svg></button>
+    <button class="tbtn only-m" data-ui="info" aria-label="รายละเอียด" title="รายละเอียด"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg></button>
+    <a class="play" href="../prototype/" title="เปิดต้นแบบเชิงโต้ตอบ"><svg class="i" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"/></svg><span>เปิดต้นแบบ</span></a>
+  </header>
+  <aside class="panel lp" aria-label="เลเยอร์">
+    <div class="ph">หน้า</div>
+    <div class="pg on"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>UX Journey &amp; Wireframe</div>
+    <div class="hr"></div>
+    <div class="ph">เลเยอร์ <small id="lycount"></small></div>
+    <nav id="layers"></nav>
+  </aside>
+  <div id="cv" role="application" aria-label="Canvas: ลากเพื่อเลื่อน, Ctrl/⌘ + scroll เพื่อซูม">
+    <div id="world"></div>
+  </div>
+  <aside class="panel rp" id="rp" aria-label="รายละเอียด"></aside>
+</div>
+<script>
+'use strict';
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' })[c]);
+const SVG = {
+  frame:'<path d="M8 3v18M16 3v18M3 8h18M3 16h18"/>',
+  sec:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h7"/>',
+  sticky:'<path d="M4 4h16v10l-6 6H4z"/><path d="M14 20v-6h6"/>',
+  comp:'<path d="M12 2l4 4-4 4-4-4zM6 8l4 4-4 4-4-4zM18 8l4 4-4 4-4-4zM12 14l4 4-4 4-4-4z"/>',
+  phone:'<rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/>',
+  mon:'<rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/>',
+  dash:'<rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/>',
+  cpu:'<rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 9h6v6H9zM9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/>',
+  play:'<path d="M7 4v16l13-8z" fill="currentColor" stroke="none"/>',
+  ext:'<path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>',
+  l:'<path d="m15 18-6-6 6-6"/>', r:'<path d="m9 18 6-6-6-6"/>', x:'<path d="M18 6 6 18M6 6l12 12"/>',
+};
+const ic = (n, s = 16) => `<svg class="i" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${SVG[n]}</svg>`;
+const DEV = {
+  mobile:{ c:'var(--c-mob)', ic:'phone', lb:'มือถือ' },
+  feed:{ c:'var(--c-feed)', ic:'mon', lb:'เว็บ · Mention Feed' },
+  dash:{ c:'var(--c-dash)', ic:'dash', lb:'เว็บ · Dashboard' },
+  sys:{ c:'var(--c-sys)', ic:'cpu', lb:'ระบบ / AI' },
+};
+const devTag = d => `<span class="dev" style="background:${DEV[d].c}">${ic(DEV[d].ic, 12)}${DEV[d].lb}</span>`;
+
+/* ========== World layout ========== */
+const W = 3800;
+const SECTIONS = [
+  { id:'journey', no:'00', name:'UX Journey ภาพรวม', x:0, y:0, w:W, h:1060 },
+  { id:'case1', no:'01', name:'กรณี 1 · มือถือ → เว็บ', x:0, y:1180, w:W, h:850 },
+  { id:'case2', no:'02', name:'กรณี 2 · เว็บ Mention Feed', x:0, y:2150, w:W, h:1000 },
+  { id:'ia', no:'03', name:'Sitemap / โครงสร้างเมนู', x:0, y:3270, w:1900, h:820 },
+  { id:'edge', no:'04', name:'สถานะพิเศษ (Edge states)', x:2000, y:3270, w:1800, h:820 },
+];
+const SEC = Object.fromEntries(SECTIONS.map(s => [s.id, s]));
+
+/* ---------- wireframe content for each screen ---------- */
+const tabbar = on => `<div class="tabbar">${['แจ้งเตือน','ฟีด','สรุป','เคส'].map((t, i) => `<span class="${i === on ? 'on' : ''}"><i></i>${t}</span>`).join('')}</div>`;
+const chrome = url => `<div class="bchrome"><div class="d"><i></i><i></i><i></i></div><div class="u">${url}</div></div>`;
+const wside = (on, badges = {}) => `<div class="wside"><div class="lg"><i></i>Social Listening</div>${[['dash','ภาพรวม'],['feed','Mention Feed'],['cases','แจ้งเตือนและเคส'],['set','ตั้งค่า']].map(([k, t]) => `<div class="it ${on === k ? 'on' : ''}"><i></i>${t}${badges[k] ? `<em>${badges[k]}</em>` : ''}</div>`).join('')}<div class="lbl" style="margin:12px 0 2px 6px">มุมมองที่บันทึก</div><div class="it"><i></i>ไซเบอร์ 24 ชม.</div><div class="it"><i></i>ข่าวปลอม</div></div>`;
+const L = (w, cls = '') => `<div class="wl ${cls}" style="width:${w}"></div>`;
+const feedRow = (n, plat, txt, conf, on, extra = '') => `<div class="fitem ${on ? 'on' : ''}"><span class="rank">${n ? '#' + n : ''}</span><div style="flex:1;min-width:0"><div class="row s"><span class="chip">${plat}</span><span>ผู้ใช้ ••••</span><span class="sp"></span>${extra}</div><div class="t" style="margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${txt}</div><div class="row s" style="margin-top:3px">AI มั่นใจ<div class="conf"><i style="width:${conf}%"></i></div>${conf}%</div></div></div>`;
+const feedHead = active => `<div class="row"><div><div class="h">Mention Feed</div><div class="s">อ่านโพสต์ในบริบท · ตรวจและแก้ผลความรู้สึก</div></div><span class="sp"></span><div class="btn sm">Export CSV</div></div>
+  <div class="ftabs">${[['review','คิวตรวจ 12'],['all','ทั้งหมด 48'],['fake','ข่าวปลอม / เว็บปลอม 5'],['news','ข่าวสื่อ 9']].map(([k, t]) => `<span class="${active === k ? 'on' : ''}">${t}</span>`).join('')}</div>
+  <div class="row"><div class="wb" style="padding:4px 10px;width:170px"><span class="s">🔍 ค้นหาข้อความ…</span></div><span class="chip">ทุกแพลตฟอร์ม ▾</span><span class="chip">ทุกความรู้สึก ▾</span><span class="sp"></span><span class="s">${active === 'review' ? 'เรียงตาม engagement × ความไม่แน่นอนของ AI' : 'เรียงตามเวลาล่าสุด'}</span></div>`;
+const POST = 'ข่าวบอกบัตรโดนตัดรัว แต่บัญชีเรามีเงินไม่ถึงร้อย โจรเปิดมาคงน้ำตาไหล 555';
+
+const FRAMES = [
+  { id:'S1', n:1, sec:'case1', dev:'mobile', name:'Push บนมือถือ', x:80, y:130, w:300, h:620,
+    cap:'ตรวจพบเรื่องผิดปกติ <b>นอก watchlist</b> แล้วส่ง push ที่มี หัวข้อ · ระดับ · ตัวเลขสำคัญ 1 ค่า', codes:['F-10'],
+    who:'เจ้าหน้าที่ฝ่ายสื่อสาร อยู่นอกโต๊ะ', goal:'รู้ทันทีว่ามีเรื่องผิดปกติ และรู้ว่าควรเปิดดูหรือไม่',
+    hot:{ x:14, y:212, w:272, h:96 },
+    pins:[ { x:32, y:232, t:'Push บอก <b>ระดับ · หัวข้อ · ตัวเลข 1 ค่า</b> อ่านจาก lock screen ได้โดยไม่ต้องปลดล็อก' }, { x:260, y:296, t:'ระบุว่า <b>นอก watchlist</b> เพื่อให้รู้ว่าเป็นเรื่องใหม่ที่ระบบตรวจพบเอง' } ],
+    html:`<div style="position:absolute;inset:0;background:#F1F1F1">
+      <div class="sb"><span>14:12</span><span>●●● <i></i></span></div>
+      <div style="text-align:center;margin-top:30px"><div class="s" style="color:#666">วันจันทร์ที่ 16 พฤศจิกายน</div><div style="font:300 60px/1 var(--ui-font);margin-top:4px">14:12</div></div>
+      <div style="position:absolute;left:14px;right:14px;top:212px" class="col">
+        <div style="background:#fff;border-radius:16px;padding:10px 12px;box-shadow:0 1px 3px rgba(0,0,0,.08)">
+          <div class="row s"><span style="width:18px;height:18px;border-radius:5px;background:#2B2B2B"></span><b style="color:#555">SOCIAL LISTENING</b><span class="sp"></span>ตอนนี้</div>
+          <div class="h2" style="margin-top:6px">⚠ วิกฤต · ภัยไซเบอร์ลามกระทบความเชื่อมั่น</div>
+          <div class="t" style="margin-top:2px">1,284 โพสต์/ชม. · <b>6.8×</b> ของปกติ · <span class="chip warn" style="line-height:15px">นอก watchlist</span></div>
+        </div>
+        <div style="background:rgba(255,255,255,.6);border-radius:16px;padding:10px 12px">${L('40%', 's')}${L('85%', 's')}</div>
+      </div>
+      <div style="position:absolute;left:0;right:0;bottom:84px;text-align:center" class="s">แตะการแจ้งเตือนเพื่อเปิด</div>
+      <div style="position:absolute;left:40px;right:40px;bottom:34px;display:flex;justify-content:space-between"><span style="width:42px;height:42px;border-radius:50%;background:#DADADA"></span><span style="width:42px;height:42px;border-radius:50%;background:#DADADA"></span></div>
+      <div style="position:absolute;left:50%;bottom:10px;width:110px;height:4px;border-radius:2px;background:#2B2B2B;transform:translateX(-50%)"></div></div>` },
+
+  { id:'S2', n:2, sec:'case1', dev:'mobile', name:'รายละเอียดแจ้งเตือน', x:520, y:130, w:300, h:620,
+    cap:'ลำดับ ระดับ → เกิดอะไร → กระทบแค่ไหน → ปุ่มทำต่อ <b>ใน viewport เดียว</b> เพื่ออ่านและตัดสินใจใน ≤ 10 วินาที', codes:['F-11'],
+    who:'เจ้าหน้าที่ฝ่ายสื่อสาร', goal:'ประเมินความรุนแรงและตัดสินใจว่าต้องยกระดับหรือไม่ ภายใน 10 วินาที',
+    hot:{ x:14, y:478, w:272, h:40 },
+    pins:[ { x:24, y:96, t:'เรียงข้อมูลตามลำดับการตัดสินใจ: <b>ระดับ → เกิดอะไร → กระทบแค่ไหน</b>' }, { x:24, y:250, t:'ตัวเลข <b>เทียบกับฐานปกติ</b> (6.8×) เข้าใจได้ทันทีโดยไม่ต้องรู้ค่าเฉลี่ย' }, { x:150, y:476, t:'ปุ่มหลักมีปุ่มเดียว อยู่ในระยะนิ้วโป้ง และ<b>ไม่ต้องเลื่อนจอ</b>' } ],
+    html:`<div class="sb"><span>14:12</span><span>●●● <i></i></span></div>
+      <div class="mnav">‹ <span>แจ้งเตือน</span><span class="sp"></span><span class="s">1/3</span></div>
+      <div style="padding:10px 14px" class="col">
+        <div class="row"><span class="chip warn">⚠ วิกฤต</span><span class="s">ตรวจพบ 13:54 · 18 นาทีที่แล้ว</span></div>
+        <div class="h">ภัยไซเบอร์ลามกระทบความเชื่อมั่น</div>
+        <div class="wb f" style="padding:8px 10px"><div class="lbl">เกิดอะไร</div><div class="t">เรื่องตัดบัตรเครดิตรัวกำลังลามเข้าสู่ความเชื่อมั่นต่อหน่วยงาน · ยังไม่อยู่ใน watchlist</div></div>
+        <div class="lbl" style="margin-top:2px">กระทบแค่ไหน</div>
+        <div class="row" style="gap:6px"><div class="kpi" style="padding:6px 8px"><b>1,284</b><span class="s">โพสต์/ชม.</span></div><div class="kpi" style="padding:6px 8px;border-color:#2B2B2B"><b>6.8×</b><span class="s">ของปกติ</span></div><div class="kpi" style="padding:6px 8px"><b>3</b><span class="s">เกินเกณฑ์</span></div></div>
+        <div><div class="row s" style="justify-content:space-between"><span>Facebook 54%</span><span>X 28%</span><span>TikTok 18%</span></div><div style="display:flex;height:8px;border-radius:4px;overflow:hidden;margin-top:3px"><i style="width:54%;background:#555"></i><i style="width:28%;background:#999"></i><i style="width:18%;background:#CCC"></i></div></div>
+        <div class="wb" style="padding:7px 10px"><div class="row s"><span class="av" style="width:16px;height:16px"></span>ผู้ใช้ •••• · X</div>${L('92%', 's')}${L('60%', 's')}</div>
+      </div>
+      <div style="position:absolute;left:14px;right:14px;top:478px" class="col"><div class="btn p">ยกระดับ</div><div class="row" style="gap:6px"><div class="btn" style="flex:1">รับทราบ</div><div class="btn" style="flex:1">เลื่อน 30 นาที</div></div></div>
+      ${tabbar(0)}` },
+
+  { id:'S3', n:3, sec:'case1', dev:'mobile', name:'ยกระดับ (Escalation)', x:960, y:130, w:300, h:620,
+    cap:'ขั้นตอนเดียว: เลือกผู้รับ (ระบบแนะนำ) → ตรวจสรุป → ยืนยัน → <b>ส่งอีเมล</b> แล้วแจ้งว่ายกระดับเรียบร้อย', codes:['F-12'],
+    who:'เจ้าหน้าที่ฝ่ายสื่อสาร', goal:'ส่งเรื่องให้ผู้บริหารที่ถูกคนพร้อมสรุป โดยไม่ต้องพิมพ์เอง',
+    hot:{ x:16, y:560, w:268, h:30 },
+    pins:[ { x:30, y:186, t:'ระบบ<b>แนะนำผู้รับ</b>ตามระดับความรุนแรง เลือกเพิ่ม/ลดได้' }, { x:30, y:340, t:'สรุปอีเมล<b>สร้างอัตโนมัติ</b>จากข้อมูลแจ้งเตือน แก้ไขได้ก่อนส่ง' }, { x:150, y:556, t:'ส่งเสร็จแล้วมีลิงก์ <b>เปิดบนเว็บ</b> เพื่อดูภาพรวมต่อ' } ],
+    html:`<div class="sb"><span>14:13</span><span>●●● <i></i></span></div>
+      <div class="mnav">‹ <span>แจ้งเตือน</span></div>
+      <div style="padding:10px 14px">${L('30%', 'd')}${L('80%')}${L('65%')}</div>
+      <div class="scrim"></div>
+      <div class="sheet" style="top:130px">
+        <div class="grab-h"></div>
+        <div class="row" style="margin-bottom:8px"><div class="stp ok"><b>✓</b>ผู้รับ</div><div class="stl"></div><div class="stp on"><b>2</b>ตรวจสรุป</div><div class="stl"></div><div class="stp"><b>3</b>ยืนยัน</div></div>
+        <div class="h">ยกระดับเรื่องนี้</div><div class="s">ส่งอีเมลถึงผู้รับ และสร้างเคสอัตโนมัติ</div>
+        <div class="lbl" style="margin:10px 0 4px">ผู้รับ · ระบบแนะนำ</div>
+        <div class="col" style="gap:6px">
+          <div class="row t"><span class="ck on">✓</span>ผู้อำนวยการฝ่ายสื่อสาร<span class="sp"></span><span class="chip">แนะนำ</span></div>
+          <div class="row t"><span class="ck on">✓</span>ผู้อำนวยการอาวุโส ฝ่ายสื่อสาร<span class="sp"></span><span class="chip">แนะนำ</span></div>
+          <div class="row t" style="color:#999"><span class="ck"></span>รองผู้อำนวยการ ฝ่ายสื่อสาร</div>
+        </div>
+        <div class="lbl" style="margin:10px 0 4px">สรุปที่จะส่ง</div>
+        <div class="wb" style="padding:8px 10px"><div class="t" style="font-size:11px"><b>[ยกระดับ · วิกฤต]</b> ภัยไซเบอร์ลามฯ</div>${L('95%', 's')}${L('88%', 's')}${L('70%', 's')}<div class="s" style="text-align:right">แก้ไขได้ ✎</div></div>
+        <div class="btn p" style="margin-top:12px">ส่งอีเมลยกระดับ</div>
+        <div class="row s" style="justify-content:center;margin-top:10px;color:#2B2B2B;font-weight:600">หลังส่ง: ✓ ยกระดับเรียบร้อย · เปิดบนเว็บเพื่อดูเคส ↗</div>
+      </div>` },
+
+  { id:'S4', n:4, sec:'case1', dev:'dash', name:'Dashboard (deep link)', x:1400, y:130, w:980, h:620,
+    cap:'จากมือถือ → เว็บ <b>คงตัวกรองเดิม</b> หัวข้อผิดปกติถูกไฮไลต์ พร้อมเหตุผลเทียบฐานปกติและป้าย “ประมาณการ”', codes:['F-01', 'F-02'],
+    who:'เจ้าหน้าที่ / หัวหน้าทีม ที่โต๊ะทำงาน', goal:'เห็นภาพรวมของเรื่องที่ยกระดับ เปรียบเทียบกับหัวข้ออื่น และวางแผนตอบสนอง',
+    pins:[ { x:190, y:92, t:'แบนเนอร์บอกว่า<b>มาจากการแจ้งเตือน</b> และคงตัวกรองเดิมไว้ (24 ชม. · ทุกแพลตฟอร์ม)' }, { x:520, y:300, t:'จุดพีคของกราฟถูกไฮไลต์ คลิกเพื่อดูโพสต์ช่วงนั้นใน Mention Feed' }, { x:660, y:470, t:'หัวข้อที่ทำให้เกิดแจ้งเตือน<b>ไฮไลต์</b> พร้อมเหตุผลเทียบฐานปกติ และป้าย <b>“ประมาณการ”</b>' } ],
+    html:`${chrome('social-listening.example/dashboard')}<div class="wapp">${wside('dash', { feed:12, cases:3 })}<div class="wmain">
+      <div class="row"><div><div class="h">ภาพรวมสถานการณ์</div><div class="s">ทีมสื่อสารองค์กร · 24 ชม. · ทุกแหล่ง</div></div><span class="sp"></span><div class="row" style="gap:0;border:1.5px solid #2B2B2B;border-radius:7px;overflow:hidden;font-size:11px"><span style="background:#2B2B2B;color:#fff;padding:3px 10px">ภาพรวม / แนวโน้ม</span><span style="padding:3px 10px">สรุปเช้า–เย็น</span></div><div class="btn sm">Export CSV</div></div>
+      <div class="wb k row" style="padding:7px 10px;border-style:dashed"><span>🔗</span><span class="t"><b>เปิดจากการแจ้งเตือนบนมือถือ</b> · คงตัวกรองเดิมไว้ให้แล้ว และไฮไลต์หัวข้อที่ทำให้เกิดการแจ้งเตือน</span><span class="sp"></span><span class="s">✕</span></div>
+      <div class="row" style="gap:14px"><span class="s">แพลตฟอร์ม</span><span class="chip on">ทั้งหมด</span><span class="chip">Facebook</span><span class="chip">X</span><span class="chip">TikTok</span><span class="s" style="margin-left:8px">ช่วงเวลา</span><span class="chip on">24 ชม.</span><span class="chip">7 วัน</span><span class="chip">30 วัน</span><span class="s" style="margin-left:8px">ความรู้สึก</span><span class="chip">ทั้งหมด ▾</span></div>
+      <div class="row" style="gap:10px"><div class="kpi"><span class="s">การกล่าวถึง</span><b>8,412</b><span class="s">▲ 38% จากเมื่อวาน</span></div><div class="kpi"><span class="s">เชิงลบ</span><b>41%</b><span class="s">▲ 12 จุด</span></div><div class="kpi"><span class="s">แจ้งเตือนเปิดอยู่</span><b>3</b><span class="s">วิกฤต 1</span></div><div class="kpi"><span class="s">ความครอบคลุม</span><b>4/4</b><span class="s">TikTok ล่าช้า ~25 นาที</span></div></div>
+      <div class="row" style="gap:10px;align-items:stretch;flex:1;min-height:0">
+        <div class="wb" style="flex:1.4;position:relative"><div class="row"><div class="h2">แนวโน้มการกล่าวถึง</div><span class="sp"></span><span class="s">— ปกติ (ค่าฐาน)</span></div>
+          <svg viewBox="0 0 400 150" preserveAspectRatio="none" style="width:100%;height:150px;margin-top:6px"><path d="M0 120 L400 120" stroke="#BBB" stroke-dasharray="4 4"/><rect x="250" y="0" width="70" height="150" fill="#FFE58A" opacity=".55"/><polyline fill="none" stroke="#2B2B2B" stroke-width="2.5" points="0,118 30,115 60,120 90,112 120,116 150,110 180,113 210,104 240,80 270,30 300,14 330,46 360,70 400,84"/><circle cx="300" cy="14" r="5" fill="#2B2B2B"/></svg>
+          <div class="row s" style="justify-content:space-between"><span>00:00</span><span>06:00</span><span>12:00</span><span><b style="color:#2B2B2B">13:00–14:30 พีค</b></span><span>ตอนนี้</span></div></div>
+        <div class="wb" style="flex:1"><div class="h2" style="margin-bottom:6px">หัวข้อที่พุ่งขึ้น</div>
+          <div class="wb k" style="padding:7px 9px;background:#FFF6CF;margin-bottom:6px"><div class="row t"><b>ภัยไซเบอร์</b><span class="chip warn" style="line-height:15px">วิกฤต</span><span class="sp"></span><b>6.8×</b></div><div class="s">สูงกว่าฐานปกติ 6.8 เท่า · <span class="chip" style="line-height:14px">ประมาณการ</span></div></div>
+          <div class="row t" style="padding:4px 9px">ธนบัตรปลอม<span class="sp"></span>3.1×</div><div class="row t" style="padding:4px 9px">อัตราดอกเบี้ย<span class="sp"></span>1.4×</div><div class="row t" style="padding:4px 9px;color:#999">ค่าเงินบาท<span class="sp"></span>1.1×</div></div>
+      </div></div></div>` },
+
+  { id:'S5', n:5, sec:'case2', dev:'feed', name:'Mention Feed · คิวตรวจ', x:80, y:130, w:800, h:520,
+    cap:'คิวเรียงตาม <b>engagement × ความไม่แน่นอน</b> โพสต์ที่ AI ไม่มั่นใจขึ้นก่อน', codes:['F-05', 'F-08'],
+    who:'เจ้าหน้าที่ตรวจสอบเนื้อหา', goal:'รู้ว่าควรตรวจโพสต์ไหนก่อน โดยไม่ต้องไล่อ่านทั้งหมด',
+    hot:{ x:150, y:218, w:338, h:72 },
+    pins:[ { x:176, y:150, t:'แท็บ <b>คิวตรวจ</b> แสดงเฉพาะโพสต์ที่ AI ไม่มั่นใจ พร้อมจำนวน' }, { x:166, y:228, t:'ลำดับ #1, #2 คิดจาก <b>engagement × ความไม่แน่นอน</b> เพื่อให้โพสต์ที่กระทบมากขึ้นก่อน' }, { x:620, y:330, t:'ยังไม่เลือกโพสต์: แผงขวาบอกว่าต้องทำอะไรต่อ' } ],
+    html:`${chrome('social-listening.example/feed')}<div class="wapp">${wside('feed', { feed:12, cases:3 })}<div class="wmain" style="padding:12px 0 0;gap:8px"><div class="col" style="padding:0 14px;gap:8px">${feedHead('review')}</div>
+      <div class="row" style="flex:1;align-items:stretch;gap:0;border-top:1px solid #EEE;min-height:0">
+        <div style="width:340px;border-right:1px solid #EEE;overflow:hidden">${feedRow(1, 'X', POST, 54)}${feedRow(2, 'Facebook', 'ดีจริง ๆ ระบบที่ล่มทุกวันจันทร์ เป็นประเพณีไปแล้ว', 58)}${feedRow(3, 'TikTok', 'แบงก์ปลอมที่ตลาดนัดเหมือนจริงมาก ใครเจอบ้าง', 61)}${feedRow(4, 'X', 'ขอบคุณที่ชี้แจงเร็ว แต่ยังงงอยู่ดี', 63)}</div>
+        <div style="flex:1;display:grid;place-items:center"><div style="text-align:center"><div style="width:44px;height:44px;border-radius:12px;background:#EEE;margin:0 auto 8px"></div><div class="h2">เลือกโพสต์จากคิวเพื่อตรวจ</div><div class="s">เห็นหลักฐานของ AI และแก้ผลได้จากแผงนี้</div></div></div>
+      </div></div></div>` },
+
+  { id:'S6', n:6, sec:'case2', dev:'feed', name:'รายละเอียด + หลักฐาน AI', x:1000, y:130, w:800, h:520,
+    cap:'อ่านในบริบท เห็น <b>คำที่จับได้ · ความมั่นใจ · ป้ายอาจเป็นประชด</b> ตัวตนผู้โพสต์ซ่อนตาม PDPA', codes:['F-07', 'F-15'],
+    who:'เจ้าหน้าที่ตรวจสอบเนื้อหา', goal:'เข้าใจว่าทำไม AI ให้ผลแบบนี้ ก่อนตัดสินใจว่าจะแก้หรือไม่',
+    hot:{ x:676, y:428, w:96, h:34 },
+    pins:[ { x:520, y:150, t:'ตัวตนผู้โพสต์<b>ซ่อนตาม PDPA</b> ผู้มีสิทธิ์เท่านั้นที่เปิดดูได้' }, { x:500, y:220, t:'ไฮไลต์ <b>คำที่ AI จับได้</b> ในข้อความจริง' }, { x:510, y:330, t:'ความมั่นใจ 54% + ป้าย <b>“อาจเป็นประชด”</b> บอกว่าทำไมควรตรวจ' } ],
+    html:`${chrome('social-listening.example/feed/m13')}<div class="wapp">${wside('feed', { feed:12, cases:3 })}<div class="wmain" style="padding:12px 0 0;gap:8px"><div class="col" style="padding:0 14px;gap:8px">${feedHead('review')}</div>
+      <div class="row" style="flex:1;align-items:stretch;gap:0;border-top:1px solid #EEE;min-height:0">
+        <div style="width:250px;border-right:1px solid #EEE;overflow:hidden">${feedRow(1, 'X', POST, 54, true)}${feedRow(2, 'Facebook', 'ดีจริง ๆ ระบบที่ล่มทุกวันจันทร์', 58)}${feedRow(3, 'TikTok', 'แบงก์ปลอมที่ตลาดนัด…', 61)}</div>
+        <div style="flex:1;padding:12px 14px;position:relative" class="col">
+          <div class="row s"><span class="chip">X</span>13:50 · engagement 4,120<span class="sp"></span>🔒 ผู้ใช้ X-5b72 · ซ่อนตาม PDPA</div>
+          <div class="t" style="font-size:13px;line-height:1.6">ข่าวบอก<span class="mk">บัตรโดนตัดรัว</span> แต่บัญชีเรามีเงินไม่ถึงร้อย โจรเปิดมาคง<span class="mk">น้ำตาไหล</span> <span class="mk">555</span> ขอบคุณที่ทำให้เราไม่ต้องห่วงเรื่องนี้เลย 😂</div>
+          <div class="wb f" style="padding:10px 12px"><div class="lbl">หลักฐานจาก AI</div>
+            <div class="row t" style="margin-top:4px">ผลของระบบ <span class="chip warn">เชิงลบ</span><span class="sp"></span>ความมั่นใจ<div class="conf" style="width:80px"><i style="width:54%"></i></div><b>54%</b></div>
+            <div class="row t" style="margin-top:6px">คำที่จับได้: <span class="chip">บัตรโดนตัดรัว</span><span class="chip">น้ำตาไหล</span><span class="chip">555</span></div>
+            <div class="row t" style="margin-top:6px"><span class="chip warn">⚑ อาจเป็นประชด</span><span class="s">AI คาดว่าน่าจะเป็น “กลาง”</span></div></div>
+          <div class="row" style="position:absolute;left:14px;right:14px;bottom:14px"><div class="btn">มอบหมาย</div><div class="btn">ข้ามไปโพสต์ถัดไป</div><span class="sp"></span><div class="btn p" style="width:96px">แก้ผล</div></div>
+        </div>
+      </div></div></div>` },
+
+  { id:'S7', n:7, sec:'case2', dev:'feed', name:'แก้ผล (3 ขั้นตอน)', x:1920, y:130, w:800, h:520,
+    cap:'<b>3 ขั้นตอน:</b> กด “แก้ผล” → เลือกเหตุผลสำเร็จรูป → ยืนยัน', codes:['F-09', 'DD-05'],
+    who:'เจ้าหน้าที่ตรวจสอบเนื้อหา', goal:'แก้ผลความรู้สึกให้ถูกต้องอย่างรวดเร็ว โดยระบบนำไปเรียนรู้ต่อ',
+    hot:{ x:510, y:406, w:120, h:38 },
+    pins:[ { x:250, y:128, t:'แถบขั้นตอนบอกว่าเหลืออีกกี่ขั้น (<b>3 ขั้น</b> ตาม DD-05)' }, { x:250, y:268, t:'<b>เหตุผลสำเร็จรูป</b> กดเลือกได้ทันที ไม่ต้องพิมพ์ ระบบใช้เป็นข้อมูลเรียนรู้' }, { x:580, y:402, t:'ปุ่มยืนยันกดได้เมื่อเลือกครบ · ถ้าไม่มีสิทธิ์ ปุ่มถูกปิดพร้อมบอกเหตุผล' } ],
+    html:`${chrome('social-listening.example/feed/m13')}<div class="wapp">${wside('feed', { feed:12, cases:3 })}<div class="wmain"><div class="col" style="gap:8px">${feedHead('review')}</div>${L('60%')}${L('80%')}${L('40%')}</div></div>
+      <div class="scrim"></div>
+      <div class="modal" style="left:170px;top:84px;width:470px">
+        <div class="row"><div class="h">แก้ผลความรู้สึก</div><span class="sp"></span><span class="s">✕</span></div>
+        <div class="row" style="margin:10px 0 12px"><div class="stp ok"><b>✓</b>กดแก้ผล</div><div class="stl"></div><div class="stp on"><b>2</b>เลือกผลและเหตุผล</div><div class="stl"></div><div class="stp"><b>3</b>ยืนยัน</div></div>
+        <div class="lbl">ผลที่ถูกต้อง</div>
+        <div class="row" style="margin:6px 0 12px;gap:8px"><div class="wb row t" style="flex:1;padding:7px 10px;color:#999"><span class="rd"></span>เชิงลบ (เดิม)</div><div class="wb k row t" style="flex:1;padding:7px 10px;font-weight:700"><span class="rd on"></span>กลาง</div><div class="wb row t" style="flex:1;padding:7px 10px"><span class="rd"></span>เชิงบวก</div></div>
+        <div class="lbl">เหตุผล</div>
+        <div class="row" style="flex-wrap:wrap;gap:6px;margin:6px 0 12px"><span class="chip on" style="line-height:24px;padding:0 12px">ประชด / เสียดสี</span><span class="chip" style="line-height:24px;padding:0 12px">ไม่เกี่ยวกับหน่วยงาน</span><span class="chip" style="line-height:24px;padding:0 12px">ภาษาถิ่น / คำแสลง</span><span class="chip" style="line-height:24px;padding:0 12px">อื่น ๆ</span></div>
+        <div class="wb f t" style="padding:7px 10px">ก่อน → หลัง: <b>เชิงลบ → กลาง</b> · Dashboard จะปรับตัวเลขตาม</div>
+        <div class="row" style="margin-top:14px;justify-content:flex-end"><div class="btn">ยกเลิก</div><div class="btn p" style="width:120px">ยืนยันการแก้</div></div>
+      </div>` },
+
+  { id:'S8', n:8, sec:'case2', dev:'feed', name:'ยืนยัน + ยกเลิกได้', x:2840, y:130, w:800, h:520,
+    cap:'เห็นผลของการแก้ (ก่อน → หลัง) · <b>ระบบจะนำไปปรับ</b> · ยกเลิกได้ · ตัวเลข Dashboard ปรับตาม', codes:['F-09'],
+    who:'เจ้าหน้าที่ตรวจสอบเนื้อหา', goal:'มั่นใจว่าการแก้ถูกบันทึกแล้ว และย้อนกลับได้ถ้ากดพลาด',
+    pins:[ { x:200, y:225, t:'โพสต์ในรายการติดป้าย <b>แก้แล้ว</b> เห็นได้ทันทีว่ารายการไหนตรวจแล้ว' }, { x:560, y:226, t:'แสดง <b>ก่อน → หลัง</b> ผู้แก้ และเวลา เพื่อตรวจย้อนหลังได้' }, { x:480, y:470, t:'Toast มีปุ่ม <b>ยกเลิก</b> ย้อนกลับได้ทันทีถ้ากดพลาด' } ],
+    html:`${chrome('social-listening.example/feed/m13')}<div class="wapp">${wside('feed', { feed:11, cases:3 })}<div class="wmain" style="padding:12px 0 0;gap:8px"><div class="col" style="padding:0 14px;gap:8px">${feedHead('all')}</div>
+      <div class="row" style="flex:1;align-items:stretch;gap:0;border-top:1px solid #EEE;min-height:0">
+        <div style="width:250px;border-right:1px solid #EEE;overflow:hidden">${feedRow(0, 'X', POST, 54, true, '<span class="chip on">✓ แก้แล้ว</span>')}${feedRow(0, 'Facebook', 'ดีจริง ๆ ระบบที่ล่มทุกวันจันทร์', 58)}${feedRow(0, 'News', 'ธปท. เตือนภัยมิจฉาชีพตัดบัตร…', 88)}</div>
+        <div style="flex:1;padding:12px 14px" class="col">
+          <div class="row s"><span class="chip">X</span>13:50 · engagement 4,120<span class="sp"></span>🔒 ซ่อนตาม PDPA</div>
+          <div class="t" style="font-size:13px;line-height:1.6;color:#555">${POST} ขอบคุณที่ทำให้เราไม่ต้องห่วงเรื่องนี้เลย 😂</div>
+          <div class="wb k" style="padding:10px 12px"><div class="lbl">ผลความรู้สึก</div><div class="row t" style="margin-top:4px"><span class="chip" style="text-decoration:line-through">เชิงลบ</span>→<span class="chip on">กลาง</span><span class="sp"></span><span class="s">แก้โดย คุณบอส · 14:30 น. · เหตุผล: ประชด</span></div><div class="s" style="margin-top:6px">ระบบจะนำการแก้นี้ไปปรับโมเดล · ตัวเลขเชิงลบใน Dashboard ลดลง 0.1 จุด</div></div>
+        </div>
+      </div></div></div>
+      <div class="toast" style="left:50%;bottom:20px;transform:translateX(-50%)">✓ บันทึกการแก้ผลแล้ว <u>ยกเลิก</u></div>` },
+];
+const FR = Object.fromEntries(FRAMES.map(f => [f.id, f]));
+FRAMES.forEach(f => { const s = SEC[f.sec]; f.ax = s.x + f.x; f.ay = s.y + f.y; });
+
+const PROTO = [
+  ['S1', 'S2', 'แตะ push'], ['S2', 'S3', 'กด ยกระดับ'], ['S3', 'S4', 'เปิดบนเว็บ ↗'],
+  ['S5', 'S6', 'เลือกโพสต์'], ['S6', 'S7', 'กด แก้ผล'], ['S7', 'S8', 'ยืนยัน'],
+];
+
+/* ---------- journey map geometry ---------- */
+const J = { padX:40, labW:210, colW:390, top:150, caseH:40, stageH:72, laneH:150, lanes:['mobile', 'feed', 'dash', 'sys'] };
+J.stageY = J.top + J.caseH + 10; J.laneY = J.stageY + J.stageH + 12;
+J.emoY = J.laneY + J.laneH * J.lanes.length + 10;
+const STAGES = [
+  ['ตรวจพบ', 'ระบบเฝ้าดูโซเชียล'], ['รับรู้', 'push เด้งบนมือถือ'], ['ประเมิน', '≤ 10 วินาที'], ['ยกระดับ', 'ส่งต่อผู้บริหาร'],
+  ['ดูภาพรวม', 'deep link ไปเว็บ'], ['คัดกรอง', 'เลือกโพสต์ที่ต้องตรวจ'], ['ตรวจหลักฐาน', 'ทำไม AI คิดแบบนี้'], ['แก้ผล', '3 ขั้นตอน'], ['ปิดงาน', 'ยืนยัน / ยกเลิกได้'],
+];
+const JCARDS = [
+  { col:0, lane:'sys', t:'AI ตรวจพบหัวข้อพุ่ง', d:'นอก watchlist · 6.8× ของปกติ' },
+  { col:1, lane:'mobile', fr:'S1', t:'ได้รับ push', d:'หัวข้อ · ระดับ · ตัวเลข 1 ค่า' },
+  { col:2, lane:'mobile', fr:'S2', t:'อ่านรายละเอียดแจ้งเตือน', d:'เกิดอะไร · กระทบแค่ไหน · ทำอะไรต่อ' },
+  { col:3, lane:'mobile', fr:'S3', t:'ยกระดับขั้นตอนเดียว', d:'ผู้รับแนะนำ · สรุปอัตโนมัติ' },
+  { col:3, lane:'sys', t:'ส่งอีเมล + สร้างเคส', d:'แจ้งผู้รับ · บันทึกประวัติ' },
+  { col:4, lane:'dash', fr:'S4', t:'เปิด Dashboard', d:'คงตัวกรอง · ไฮไลต์หัวข้อ' },
+  { col:5, lane:'feed', fr:'S5', t:'เปิดคิวตรวจ', d:'engagement × ความไม่แน่นอน' },
+  { col:5, lane:'sys', t:'จัดลำดับคิวอัตโนมัติ', d:'โพสต์ที่ AI ไม่มั่นใจขึ้นก่อน' },
+  { col:6, lane:'feed', fr:'S6', t:'ดูหลักฐานของ AI', d:'คำที่จับได้ · ความมั่นใจ · ประชด?' },
+  { col:7, lane:'feed', fr:'S7', t:'แก้ผลความรู้สึก', d:'เลือกผล → เหตุผล → ยืนยัน' },
+  { col:8, lane:'feed', fr:'S8', t:'เห็นผล + ยกเลิกได้', d:'ก่อน → หลัง · toast ยกเลิก' },
+  { col:8, lane:'dash', t:'ตัวเลขปรับตาม', d:'Dashboard อัปเดตจากการแก้', fr:'S4' },
+  { col:8, lane:'sys', t:'เรียนรู้จากการแก้', d:'feedback loop ปรับโมเดล' },
+];
+const jcell = (col, lane) => ({ x:J.padX + J.labW + col * J.colW + 14, y:J.laneY + J.lanes.indexOf(lane) * J.laneH + 14, w:J.colW - 28, h:J.laneH - 28 });
+const JLINKS = [[0, 1, 'แจ้งเตือน'], [1, 2], [2, 3], [3, 4], [3, 5, 'deep link'], [6, 8], [7, 6], [8, 9], [9, 10], [10, 11], [10, 12]];
+const EMO = [ [3, 'ยังไม่รู้ตัว'], [1.4, 'ตกใจ / กังวล'], [3.2, 'เข้าใจเร็ว'], [4.2, 'โล่งใจ'], [4.6, 'มั่นใจ'], [2.6, 'งานล้น'], [3.6, 'เข้าใจ AI'], [4.2, 'ควบคุมได้'], [4.8, 'พอใจ · ย้อนได้'] ];
+
+/* ---------- stickies ---------- */
+const STICKIES = [
+  { sec:'case1', x:2460, y:130, w:290, h:200, c:'p', k:'Pain point', t:'รู้ข่าวช้า ต้องคอยเปิดหลายแพลตฟอร์มเอง กว่าจะเห็นเรื่องก็ลามไปแล้ว' },
+  { sec:'case1', x:2790, y:130, w:290, h:200, c:'y', k:'Insight', t:'ผู้ใช้ต้องรู้ “เกิดอะไร · กระทบแค่ไหน” ให้ได้ใน 10 วินาที ขณะอยู่นอกโต๊ะ' },
+  { sec:'case1', x:3120, y:130, w:290, h:200, c:'g', k:'Design decision', t:'Push มีแค่ หัวข้อ · ระดับ · ตัวเลขสำคัญ 1 ค่า (F-10)' },
+  { sec:'case1', x:3450, y:130, w:290, h:200, c:'g', k:'Design decision', t:'ยกระดับขั้นตอนเดียว ระบบแนะนำผู้รับและร่างสรุปให้ (F-12)' },
+  { sec:'case1', x:2460, y:360, w:290, h:200, c:'g', k:'Design decision', t:'Deep link คงตัวกรองเดิม และไฮไลต์หัวข้อที่ทำให้เกิดแจ้งเตือน (F-01, F-02)' },
+  { sec:'case1', x:2790, y:360, w:290, h:200, c:'b', k:'Channel', t:'มือถือ = รับรู้และตัดสินใจ · เว็บ = วิเคราะห์และลงมือแก้' },
+  { sec:'case2', x:80, y:720, w:300, h:190, c:'p', k:'Pain point', t:'AI อ่านโพสต์ประชดผิด ทำให้ตัวเลขเชิงลบสูงเกินจริง' },
+  { sec:'case2', x:410, y:720, w:300, h:190, c:'y', k:'Insight', t:'ผู้ตรวจต้องเห็นว่า “ทำไม AI คิดแบบนี้” ก่อนจะกล้าแก้ผล' },
+  { sec:'case2', x:740, y:720, w:300, h:190, c:'g', k:'Design decision', t:'คิวเรียงตาม engagement × ความไม่แน่นอน (F-05, F-08)' },
+  { sec:'case2', x:1070, y:720, w:300, h:190, c:'g', k:'Design decision', t:'แก้ผล 3 ขั้นตอน พร้อมเหตุผลสำเร็จรูป และยกเลิกได้ (F-09 · DD-05)' },
+  { sec:'case2', x:1400, y:720, w:300, h:190, c:'b', k:'Privacy', t:'ซ่อนตัวตนผู้โพสต์ตาม PDPA เปิดดูได้เฉพาะผู้มีสิทธิ์ (F-15)' },
+];
+
+/* ---------- sitemap ---------- */
+const NODES = [
+  { id:'root', x:760, y:110, w:380, h:56, t:'Social Listening', cls:'root' },
+  { id:'mob', x:200, y:210, w:360, h:50, t:'แอปมือถือ · Alert &amp; Escalation', cls:'l1', dot:'var(--c-mob)' },
+  { id:'web', x:1210, y:210, w:420, h:50, t:'เว็บแอป · Dashboard + Mention Feed', cls:'l1', dot:'var(--c-feed)' },
+  { id:'m-push', x:40, y:310, w:190, h:44, t:'Push (lock screen)', fr:'S1' },
+  { id:'m-al', x:250, y:310, w:190, h:44, t:'แจ้งเตือน' },
+  { id:'m-feed', x:460, y:310, w:190, h:44, t:'ฟีด' },
+  { id:'m-sum', x:670, y:310, w:130, h:44, t:'สรุป' },
+  { id:'m-case', x:670, y:370, w:130, h:44, t:'เคส' },
+  { id:'m-det', x:270, y:390, w:200, h:44, t:'รายละเอียดแจ้งเตือน', fr:'S2' },
+  { id:'m-esc', x:270, y:460, w:200, h:44, t:'Sheet ยกระดับ', fr:'S3' },
+  { id:'m-done', x:270, y:530, w:200, h:44, t:'ส่งสำเร็จ → เปิดบนเว็บ' },
+  { id:'m-post', x:480, y:390, w:170, h:44, t:'โพสต์ (ตัวตนซ่อน)' },
+  { id:'w-dash', x:930, y:310, w:200, h:44, t:'ภาพรวม' },
+  { id:'w-feed', x:1150, y:310, w:200, h:44, t:'Mention Feed' },
+  { id:'w-case', x:1370, y:310, w:200, h:44, t:'แจ้งเตือนและเคส' },
+  { id:'w-set', x:1590, y:310, w:200, h:44, t:'ตั้งค่า' },
+  { id:'w-ov', x:950, y:390, w:180, h:44, t:'ภาพรวม / แนวโน้ม', fr:'S4' },
+  { id:'w-dig', x:950, y:450, w:180, h:44, t:'สรุปเช้า–เย็น' },
+  { id:'w-q', x:1170, y:390, w:180, h:44, t:'คิวตรวจ', fr:'S5' },
+  { id:'w-all', x:1170, y:450, w:180, h:44, t:'ทั้งหมด', fr:'S8' },
+  { id:'w-fake', x:1170, y:510, w:180, h:44, t:'ข่าวปลอม / เว็บปลอม' },
+  { id:'w-news', x:1170, y:570, w:180, h:44, t:'ข่าวสื่อ' },
+  { id:'w-det', x:1170, y:650, w:180, h:44, t:'รายละเอียดโพสต์', fr:'S6' },
+  { id:'w-fix', x:1170, y:720, w:180, h:44, t:'Modal แก้ผล 3 ขั้น', fr:'S7' },
+  { id:'w-cl', x:1390, y:390, w:180, h:44, t:'รายการเคส' },
+  { id:'w-wl', x:1610, y:390, w:180, h:44, t:'Watchlist' },
+  { id:'w-thr', x:1610, y:450, w:180, h:44, t:'เกณฑ์ engagement' },
+];
+const ND = Object.fromEntries(NODES.map(n => [n.id, n]));
+const TREE = [['root', 'mob'], ['root', 'web'], ['mob', 'm-push'], ['mob', 'm-al'], ['mob', 'm-feed'], ['mob', 'm-sum'], ['web', 'w-dash'], ['web', 'w-feed'], ['web', 'w-case'], ['web', 'w-set']];
+const RAIL = [['m-al', 'm-det'], ['m-al', 'm-esc'], ['m-al', 'm-done'], ['m-feed', 'm-post'], ['m-sum', 'm-case', 'sib'], ['w-dash', 'w-ov'], ['w-dash', 'w-dig'], ['w-feed', 'w-q'], ['w-feed', 'w-all'], ['w-feed', 'w-fake'], ['w-feed', 'w-news'], ['w-q', 'w-det', 'down'], ['w-det', 'w-fix', 'down'], ['w-case', 'w-cl'], ['w-set', 'w-wl'], ['w-set', 'w-thr']];
+
+/* ---------- edge states (component set) ---------- */
+const VARS = [
+  { t:'สถานะ = โหลดไม่สำเร็จ', d:'มือถือ + Dashboard · ข้อมูลเดิมไม่หาย · ปุ่มลองใหม่', html:`<div style="display:grid;place-items:center;height:100%;text-align:center"><div><div style="width:46px;height:46px;border-radius:50%;border:2px solid #2B2B2B;margin:0 auto 8px;display:grid;place-items:center;font-weight:700">!</div><div class="h2">โหลดข้อมูลไม่สำเร็จ</div><div class="s">การเชื่อมต่อขัดข้อง ข้อมูลที่เห็นก่อนหน้านี้ยังไม่ถูกลบ</div><div class="btn p" style="width:120px;margin:10px auto 0">↻ ลองใหม่</div></div></div>` },
+  { t:'สถานะ = ไม่มีสิทธิ์แก้ผล', d:'ปุ่มถูกปิด พร้อมบอกเหตุผลและทางเลือก', html:`<div style="padding:18px" class="col"><div class="row"><div class="h2">หลักฐานจาก AI</div><span class="sp"></span><span class="chip warn">เชิงลบ · 54%</span></div>${L('90%')}${L('70%')}<div class="row" style="margin-top:8px"><div class="btn g" style="width:110px">🔒 แก้ผล</div><span class="s">บทบาทของคุณดูได้อย่างเดียว · ขอสิทธิ์จากหัวหน้าทีม</span></div></div>` },
+  { t:'สถานะ = ยกระดับส่งไม่สำเร็จ', d:'เก็บเป็นฉบับร่าง + ลองส่งใหม่', html:`<div class="scrim" style="background:rgba(0,0,0,.18)"></div><div class="sheet" style="top:46px"><div class="grab-h"></div><div class="h2">ส่งไม่สำเร็จ</div><div class="s">เก็บเป็นฉบับร่างแล้ว ข้อความไม่หาย</div><div class="btn p" style="margin-top:10px">↻ ลองส่งใหม่</div><div class="btn" style="margin-top:6px">ปิด · ดูฉบับร่าง</div></div>` },
+  { t:'สถานะ = มีผู้อื่นรับเรื่องแล้ว', d:'กันการยกระดับซ้ำ', html:`<div class="scrim" style="background:rgba(0,0,0,.18)"></div><div class="sheet" style="top:46px"><div class="grab-h"></div><div class="h2">คุณนภารับเรื่องนี้แล้ว · 14:10</div><div class="s">ยกระดับต่อได้ถ้าเห็นว่าจำเป็น</div><div class="btn" style="margin-top:10px">ยกระดับต่อ</div><div class="btn p" style="margin-top:6px">กลับไปดูรายละเอียด</div></div>` },
+  { t:'สถานะ = เครือข่ายช้า', d:'skeleton + สถานะกำลังโหลด (~7 วินาที)', html:`<div style="padding:18px" class="col"><div class="row s"><span style="width:12px;height:12px;border-radius:50%;border:2px solid #CCC;border-top-color:#2B2B2B"></span>กำลังโหลด…</div><div class="skel" style="height:18px;width:60%"></div><div class="row"><div class="skel" style="height:54px;flex:1"></div><div class="skel" style="height:54px;flex:1"></div><div class="skel" style="height:54px;flex:1"></div></div><div class="skel" style="height:70px"></div></div>` },
+  { t:'สถานะ = Export ล้มเหลว', d:'Dashboard · บอกสาเหตุ + ลองใหม่', html:`<div class="scrim" style="background:rgba(0,0,0,.18)"></div><div class="modal" style="left:40px;right:40px;top:40px"><div class="h2">Export ไม่สำเร็จ</div><div class="s">ไฟล์ใหญ่เกินไปหรือการเชื่อมต่อขาด ลองลดช่วงเวลาแล้วลองใหม่</div><div class="row" style="margin-top:12px;justify-content:flex-end"><div class="btn sm">ปิด</div><div class="btn sm p">↻ ลองใหม่</div></div></div>` },
+];
+
+/* ========== Render world ========== */
+function curve(x1, y1, x2, y2){ const dx = Math.max(60, Math.abs(x2 - x1) * .45); return `M${x1} ${y1} C${x1 + dx} ${y1} ${x2 - dx} ${y2} ${x2} ${y2}`; }
+function renderWorld(){
+  const h = [], svg = [], labels = [];
+  // sections
+  SECTIONS.forEach(s => {
+    h.push(`<div class="sec" id="sec-${s.id}" style="left:${s.x}px;top:${s.y}px;width:${s.w}px;height:${s.h}px"><div class="sec-t"><i>${s.no}</i>${s.name}</div>`);
+    if (s.id === 'journey') h.push(`<div class="sec-h"><div><h2>เส้นทางผู้ใช้ตั้งแต่ “ตรวจพบ” ถึง “ปิดงาน”</h2><p>ผู้ใช้หลัก: เจ้าหน้าที่ฝ่ายสื่อสารหน่วยงานภาครัฐ · มือถือใช้รับรู้และตัดสินใจขณะอยู่นอกโต๊ะ · เว็บใช้วิเคราะห์และแก้ผลที่โต๊ะทำงาน · คลิกการ์ดเพื่อซูมไปยัง wireframe ของขั้นนั้น</p></div><div class="legend">${J.lanes.map(l => `<span><i style="background:${DEV[l].c}"></i>${DEV[l].lb}</span>`).join('')}</div></div>`);
+    if (s.id === 'case1') h.push(`<div class="sec-h"><div><h2>ตรวจพบ → แจ้งเตือน → ยกระดับ</h2><p>Push บนมือถือ → อ่านแล้วตัดสินใจใน 10 วินาที → ยกระดับขั้นตอนเดียว → เปิด Dashboard บนเว็บด้วย deep link · เส้นสีฟ้า = การกดที่พาไปหน้าถัดไป</p></div></div>`);
+    if (s.id === 'case2') h.push(`<div class="sec-h"><div><h2>ตรวจโพสต์ประชด → แก้ผล</h2><p>คิวตรวจ → ดูหลักฐานของ AI → แก้ผลใน 3 ขั้นตอน → ยืนยันและยกเลิกได้</p></div></div>`);
+    if (s.id === 'ia') h.push(`<div class="sec-h"><div><h2>โครงสร้างเมนู</h2><p>กล่องที่มีป้าย S# คลิกเพื่อไปยัง wireframe · เส้นประ = ลิงก์ข้ามอุปกรณ์</p></div></div>`);
+    if (s.id === 'edge') h.push(`<div class="sec-h"><div><h2>Component set: สถานะพิเศษ</h2><p>ลองได้จริงในต้นแบบ ผ่านเมนู “สถานะจำลอง”</p></div></div>`);
+    h.push(`</div>`);
+  });
+  // journey map
+  const js = SEC.journey, ox = js.x, oy = js.y, colX = c => ox + J.padX + J.labW + c * J.colW;
+  [[0, 5, 'กรณี 1 · มือถือ → เว็บ', 'var(--c-mob)'], [5, 9, 'กรณี 2 · เว็บ Mention Feed', 'var(--c-feed)']].forEach(([a, b, t, c]) => h.push(`<button class="jcase" data-zoom="case${a ? 2 : 1}" title="ซูมไปที่${t}" style="left:${colX(a) + 4}px;top:${oy + J.top}px;width:${(b - a) * J.colW - 8}px;height:${J.caseH}px;background:${c}">${t}<span style="margin-left:auto;font-size:12px;opacity:.85">ดู wireframe ↓</span></button>`));
+  STAGES.forEach(([t, d], i) => h.push(`<div class="jcol" style="left:${colX(i) + 4}px;top:${oy + J.stageY}px;width:${J.colW - 8}px;height:${J.stageH}px"><span class="no">ขั้น ${i + 1}</span><b>${t}</b><span>${d}</span></div>`));
+  J.lanes.forEach((l, i) => {
+    const y = oy + J.laneY + i * J.laneH;
+    h.push(`<div class="jrow" style="left:${ox + J.padX}px;top:${y}px;width:${js.w - J.padX * 2}px"></div>`);
+    h.push(`<div class="jlane" style="left:${ox + J.padX}px;top:${y + 14}px;width:${J.labW - 20}px;height:${J.laneH - 28}px;border-color:${DEV[l].c}"><b>${{ mobile:'มือถือ', feed:'เว็บ · Feed', dash:'เว็บ · Dashboard', sys:'ระบบ / AI' }[l]}</b><span>${{ mobile:'แจ้งเตือน · ยกระดับ', feed:'ตรวจและแก้ผล', dash:'ภาพรวม · แนวโน้ม', sys:'เบื้องหลัง (backstage)' }[l]}</span></div>`);
+  });
+  h.push(`<div class="jrow" style="left:${ox + J.padX}px;top:${oy + J.emoY}px;width:${js.w - J.padX * 2}px"></div>`);
+  h.push(`<div class="jlane" style="left:${ox + J.padX}px;top:${oy + J.emoY + 14}px;width:${J.labW - 20}px;height:150px;border-color:#F24822"><b>ความรู้สึก</b><span>ขึ้น = ดี · ลง = กังวล</span></div>`);
+  JCARDS.forEach((c, i) => {
+    const r = jcell(c.col, c.lane), f = c.fr && FR[c.fr];
+    c._r = { x:ox + r.x, y:oy + r.y, w:r.w, h:r.h };
+    h.push(`<${f ? 'button' : 'div'} class="jc ${c.lane === 'sys' ? 'sys' : ''}" ${f ? `data-go="${c.fr}" aria-label="ไปที่ ${f.id} ${esc(f.name)}"` : ''} style="left:${c._r.x}px;top:${c._r.y}px;width:${r.w}px;height:${r.h}px;border-top-color:${DEV[c.lane].c}"><div class="r1">${f ? `<span class="st" style="background:${DEV[c.lane].c}">${c.fr}</span>` : ''}${ic(DEV[c.lane].ic, 12)}${DEV[c.lane].lb}</div><b>${c.t}</b><p>${c.d}</p></${f ? 'button' : 'div'}>`);
+  });
+  JLINKS.forEach(([a, b, lb]) => {
+    const A = JCARDS[a]._r, B = JCARDS[b]._r;
+    let x1, y1, x2, y2, d;
+    if (A.x === B.x){ x1 = A.x + A.w / 2; x2 = x1; const up = B.y < A.y; y1 = up ? A.y : A.y + A.h; y2 = up ? B.y + B.h : B.y; d = `M${x1} ${y1} L${x2} ${y2}`; }
+    else { x1 = A.x + A.w; y1 = A.y + A.h / 2; x2 = B.x; y2 = B.y + B.h / 2; d = curve(x1, y1, x2, y2); }
+    svg.push(`<path d="${d}" fill="none" stroke="var(--label)" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#ah-g)"/>`);
+    if (lb) labels.push(`<div class="jlabel" style="left:${(x1 + x2) / 2}px;top:${(y1 + y2) / 2}px">${lb}</div>`);
+  });
+  // emotion curve
+  const ey = oy + J.emoY, pts = EMO.map(([v], i) => [colX(i) + J.colW / 2, ey + 150 - (v - 1) / 4 * 110]);
+  let ed = `M${pts[0][0]} ${pts[0][1]}`; for (let i = 1; i < pts.length; i++){ const [x0, y0] = pts[i - 1], [x, y] = pts[i], m = (x - x0) / 2; ed += ` C${x0 + m} ${y0} ${x - m} ${y} ${x} ${y}`; }
+  svg.push(`<path d="${ed}" fill="none" stroke="#F24822" stroke-width="3"/>`);
+  pts.forEach(([x, y], i) => { svg.push(`<circle cx="${x}" cy="${y}" r="7" fill="#fff" stroke="#F24822" stroke-width="3"/>`); labels.push(`<div class="jlabel" style="left:${x}px;top:${y + (EMO[i][0] < 2.5 ? 26 : -24)}px;border-style:solid;color:var(--sec-ink)">${EMO[i][1]}</div>`); });
+  // frames
+  FRAMES.forEach(f => {
+    h.push(`<div class="fl" data-fr="${f.id}" style="left:${f.ax}px;top:${f.ay - 24}px">${f.id} · ${esc(f.name)} ${devTag(f.dev)}</div>`);
+    h.push(`<div class="fr" data-fr="${f.id}" id="fr-${f.id}" style="left:${f.ax}px;top:${f.ay}px;width:${f.w}px;height:${f.h}px">${f.html}${f.hot ? `<div class="hot" style="left:${f.hot.x}px;top:${f.hot.y}px;width:${f.hot.w}px;height:${f.hot.h}px"></div>` : ''}${f.pins.map((p, i) => `<span class="pin" style="left:${p.x}px;top:${p.y}px" title="${esc(p.t.replace(/<[^>]+>/g, ''))}">${i + 1}</span>`).join('')}</div>`);
+  });
+  // prototype connections
+  PROTO.forEach(([a, b, lb]) => {
+    const A = FR[a], B = FR[b], hs = A.hot || { x:A.w - 10, y:A.h / 2, w:0, h:0 };
+    const x1 = A.ax + hs.x + hs.w, y1 = A.ay + hs.y + hs.h / 2, x2 = B.ax - 4, y2 = B.ay + 70;
+    svg.push(`<circle cx="${x1}" cy="${y1}" r="6" fill="var(--proto)" stroke="#fff" stroke-width="2"/><path d="${curve(x1, y1, x2, y2)}" fill="none" stroke="var(--proto)" stroke-width="3" marker-end="url(#ah-b)"/>`);
+    const mx = (A.ax + A.w + B.ax) / 2, dx = Math.max(60, Math.abs(x2 - x1) * .45);
+    let best = [x1, y1];
+    for (let k = 0; k <= 60; k++){ const t = k / 60, u = 1 - t, bx = u*u*u*x1 + 3*u*u*t*(x1 + dx) + 3*u*t*t*(x2 - dx) + t*t*t*x2, by = u*u*u*y1 + 3*u*u*t*y1 + 3*u*t*t*y2 + t*t*t*y2; if (Math.abs(bx - mx) < Math.abs(best[0] - mx)) best = [bx, by]; }
+    labels.push(`<div class="plabel" style="left:${mx}px;top:${best[1]}px">${lb}</div>`);
+  });
+  // stickies
+  STICKIES.forEach(s => { const S = SEC[s.sec]; h.push(`<div class="sticky ${s.c}" style="left:${S.x + s.x}px;top:${S.y + s.y}px;width:${s.w}px;min-height:${s.h}px"><small>${s.k}</small>${s.t}</div>`); });
+  // sitemap
+  const ia = SEC.ia;
+  NODES.forEach(n => { n.ax = ia.x + n.x; n.ay = ia.y + n.y; h.push(`<${n.fr ? 'button' : 'div'} class="node ${n.cls || ''} ${n.fr ? 'go' : ''}" ${n.fr ? `data-go="${n.fr}"` : ''} style="left:${n.ax}px;top:${n.ay}px;width:${n.w}px;height:${n.h}px">${n.dot ? `<span class="dot" style="background:${n.dot}"></span>` : ''}${n.t}${n.fr ? `<span class="st">${n.fr}</span>` : ''}</${n.fr ? 'button' : 'div'}>`); });
+  TREE.forEach(([a, b]) => { const A = ND[a], B = ND[b], x1 = A.ax + A.w / 2, y1 = A.ay + A.h, x2 = B.ax + B.w / 2, y2 = B.ay, my = (y1 + y2) / 2; svg.push(`<path d="M${x1} ${y1} V${my} H${x2} V${y2}" fill="none" stroke="var(--sec-ink)" stroke-width="1.5"/>`); });
+  RAIL.forEach(([a, b, k]) => {
+    const A = ND[a], B = ND[b];
+    if (k === 'down' || k === 'sib'){ const x = B.ax + B.w / 2; svg.push(`<path d="M${x} ${A.ay + A.h} V${B.ay}" fill="none" stroke="var(--sec-ink)" stroke-width="1.5"/>`); return; }
+    const x = A.ax + 12; svg.push(`<path d="M${x} ${A.ay + A.h} V${B.ay + B.h / 2} H${B.ax}" fill="none" stroke="var(--sec-ink)" stroke-width="1.5"/>`);
+  });
+  { const A = ND['m-done'], B = ND['w-ov'], x1 = A.ax + A.w, y1 = A.ay + A.h / 2, x2 = B.ax, y2 = B.ay + B.h / 2;
+    svg.push(`<path d="M${x1} ${y1} C${x1 + 420} ${y1 + 140} ${x2 - 260} ${y2 + 160} ${x2} ${y2}" fill="none" stroke="var(--proto)" stroke-width="2.5" stroke-dasharray="8 6" marker-end="url(#ah-b)"/>`);
+    labels.push(`<div class="plabel" style="left:${(x1 + x2) / 2 + 40}px;top:${Math.max(y1, y2) + 112}px">deep link · คงตัวกรองเดิม</div>`); }
+  // component set
+  const es = SEC.edge, cx = es.x + 40, cy = es.y + 150, cw = es.w - 80, ch = 630, vw = (cw - 4 * 30) / 3, vh = (ch - 3 * 30 - 40) / 2;
+  h.push(`<div class="cset" style="left:${cx}px;top:${cy}px;width:${cw}px;height:${ch}px"><div class="cset-t">${ic('comp', 14)}State / Edge cases</div></div>`);
+  VARS.forEach((v, i) => { const x = cx + 30 + (i % 3) * (vw + 30), y = cy + 50 + Math.floor(i / 3) * (vh + 30); h.push(`<div class="var-t" style="left:${x}px;top:${y - 22}px">◇ ${v.t}</div><div class="var" style="left:${x}px;top:${y}px;width:${vw}px;height:${vh - 34}px">${v.html}</div><div class="var-t" style="left:${x}px;top:${y + vh - 26}px;color:var(--label)">${v.d}</div>`); });
+
+  const defs = `<defs><marker id="ah-b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#0D99FF"/></marker><marker id="ah-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9A9A9A"/></marker></defs>`;
+  world.innerHTML = h.join('') + `<svg class="wires" width="1" height="1">${defs}${svg.join('')}</svg>` + labels.join('') + `<div id="selbox"><i></i><i></i><i></i><i></i><b></b></div>`;
+}
+
+/* ========== Layers panel ========== */
+function renderLayers(){
+  const out = [];
+  SECTIONS.forEach(s => {
+    out.push(`<button class="ly lsec" data-zoom="${s.id}">${ic('sec', 14)}<span>${s.no} · ${s.name}</span></button>`);
+    FRAMES.filter(f => f.sec === s.id).forEach(f => out.push(`<button class="ly ch" data-go="${f.id}" data-ly="${f.id}">${ic('frame', 14)}<span>${f.id} · ${esc(f.name)}</span></button>`));
+    if (s.id === 'case1' || s.id === 'case2') out.push(`<button class="ly ch" data-zoom="${s.id}" data-sub="sticky">${ic('sticky', 14)}<span>Insights &amp; decisions</span></button>`);
+    if (s.id === 'edge') out.push(`<button class="ly ch" data-zoom="edge">${ic('comp', 14)}<span>State / Edge cases (${VARS.length})</span></button>`);
+  });
+  $('#layers').innerHTML = out.join('');
+  $('#lycount').textContent = FRAMES.length + ' frames';
+}
+
+/* ========== Right panel ========== */
+const PROTO_URL = n => `../prototype/#s${n}`;
+function renderPanel(){
+  const f = sel && FR[sel];
+  if (!f){
+    $('#rp').innerHTML = `
+      <div class="blk"><h3>UX Journey · Wireframe</h3><p>ภาพรวมการใช้งาน Social Listening แบบเป็นขั้นตอน ครอบคลุม <b>มือถือ</b>, <b>เว็บ Mention Feed</b> และ <b>Dashboard</b></p><p class="mut">คลิก frame หรือการ์ดใน journey เพื่อดูรายละเอียดของแต่ละหน้าจอ</p></div>
+      <div class="blk"><h3>Prototype flows</h3>
+        <a class="flow" href="${PROTO_URL(1)}"><span class="fi">${ic('play', 12)}</span><span><b>Flow 1 · กรณี 1</b><small>มือถือ → เว็บ · S1–S4</small></span></a>
+        <a class="flow" href="${PROTO_URL(5)}"><span class="fi">${ic('play', 12)}</span><span><b>Flow 2 · กรณี 2</b><small>เว็บ Mention Feed · S5–S8</small></span></a></div>
+      <div class="blk"><h3>อ่าน canvas อย่างไร</h3><div class="col" style="gap:8px;font-family:var(--font);font-size:12.5px">
+        <div class="row"><span style="width:28px;height:3px;background:var(--proto);border-radius:2px"></span>การกดที่พาไปหน้าถัดไป</div>
+        <div class="row"><span class="pin" style="position:static;transform:none;width:20px;height:20px;font-size:10px">1</span>หมายเหตุการออกแบบ (annotation)</div>
+        <div class="row"><span style="width:20px;height:20px;background:#FFE299"></span>Insight · <span style="width:20px;height:20px;background:#AFF4C6"></span>Decision · <span style="width:20px;height:20px;background:#FFC7C2"></span>Pain</div></div></div>
+      <div class="blk"><h3>คีย์ลัด</h3><div class="keys"><span>เลื่อน canvas</span><span>ลาก · <kbd>Space</kbd>+ลาก</span><span>ซูม</span><span><kbd>⌘/Ctrl</kbd>+scroll · <kbd>+</kbd><kbd>−</kbd></span><span>พอดีทั้งหมด</span><span><kbd>⇧</kbd><kbd>1</kbd></span><span>ขั้นก่อน/ถัดไป</span><span><kbd>←</kbd><kbd>→</kbd></span><span>ยกเลิกการเลือก</span><span><kbd>Esc</kbd></span></div></div>`;
+    return;
+  }
+  const i = FRAMES.indexOf(f), prev = FRAMES[i - 1], next = FRAMES[i + 1];
+  $('#rp').innerHTML = `
+    <div class="blk"><div class="row" style="justify-content:space-between;margin-bottom:6px"><h3 style="margin:0">${ic('frame', 14)} ${f.id} · ${esc(f.name)}</h3><button class="tbtn" data-ui="desel" aria-label="ปิด" style="height:24px;min-width:24px">${ic('x', 14)}</button></div>
+      <div class="kv"><span>อุปกรณ์</span><div>${devTag(f.dev)}</div><span>ขนาด</span><div>${f.w} × ${f.h}</div><span>กรณี</span><div>${f.sec === 'case1' ? 'กรณี 1 · ขั้น ' + f.n + '/4' : 'กรณี 2 · ขั้น ' + (f.n - 4) + '/4'}</div></div></div>
+    <div class="blk"><h3>ขั้นตอนนี้</h3><p>${f.cap}</p><div class="tags" style="margin-top:6px">${f.codes.map(c => `<span class="tag">${c}</span>`).join('')}</div></div>
+    <div class="blk"><h3>ผู้ใช้ · เป้าหมาย</h3><p><b>${f.who}</b></p><p class="mut">${f.goal}</p></div>
+    <div class="blk"><h3>Annotations</h3><ul class="notes">${f.pins.map((p, k) => `<li><b class="n">${k + 1}</b><span>${p.t}</span></li>`).join('')}</ul></div>
+    <div class="blk"><a class="btn-r" href="${PROTO_URL(f.n)}">${ic('play', 12)} เปิดขั้นนี้ในต้นแบบ</a>
+      <div class="row" style="gap:6px;margin-top:8px;display:flex">${prev ? `<button class="btn-o" data-go="${prev.id}">${ic('l', 14)}${prev.id}</button>` : '<span style="flex:1"></span>'}${next ? `<button class="btn-o" data-go="${next.id}">${next.id}${ic('r', 14)}</button>` : '<span style="flex:1"></span>'}</div></div>`;
+}
+
+/* ========== Canvas engine ========== */
+const cv = $('#cv'), world = $('#world');
+let tx = 0, ty = 0, z = 1, sel = null, tool = 'move', space = false, anim = null;
+function apply(){
+  world.style.transform = `translate(${tx}px,${ty}px) scale(${z})`;
+  const g = 24 * z;
+  cv.style.backgroundSize = z < .25 ? '0 0' : `${g}px ${g}px`;
+  cv.style.backgroundPosition = `${tx}px ${ty}px`;
+  $('#pct').textContent = Math.round(z * 100) + '%';
+}
+function zoomAt(f, px, py){
+  const nz = Math.min(4, Math.max(.05, z * f)); const k = nz / z;
+  tx = px - (px - tx) * k; ty = py - (py - ty) * k; z = nz; apply();
+}
+function zoomTo(r, opt = {}){
+  const W = cv.clientWidth, H = cv.clientHeight, pad = opt.pad ?? 60;
+  const nz = Math.min(opt.max ?? 1.2, (W - pad * 2) / r.w, (H - pad * 2) / r.h);
+  const ntx = (W - r.w * nz) / 2 - r.x * nz, nty = (H - r.h * nz) / 2 - r.y * nz;
+  cancelAnimationFrame(anim);
+  if (opt.instant || matchMedia('(prefers-reduced-motion:reduce)').matches){ tx = ntx; ty = nty; z = nz; apply(); return; }
+  const s = { tx, ty, z }, t0 = performance.now(), D = 380;
+  const step = t => { const p = Math.min(1, (t - t0) / D), e = 1 - Math.pow(1 - p, 3);
+    z = s.z + (nz - s.z) * e; tx = s.tx + (ntx - s.tx) * e; ty = s.ty + (nty - s.ty) * e; apply();
+    if (p < 1) anim = requestAnimationFrame(step); };
+  anim = requestAnimationFrame(step);
+}
+const bounds = () => ({ x:-40, y:-80, w:W + 80, h:SEC.edge.y + SEC.edge.h + 120 });
+const secRect = id => { const s = SEC[id]; return { x:s.x, y:s.y - 44, w:s.w, h:s.h + 44 }; };
+function select(id, zoom, instant){
+  sel = id && FR[id] ? id : null;
+  document.querySelectorAll('.fr.on,.fl.on,.ly.on').forEach(e => e.classList.remove('on'));
+  const sb = $('#selbox');
+  if (sel){
+    const f = FR[sel];
+    document.querySelectorAll(`[data-fr="${sel}"]`).forEach(e => e.classList.add('on'));
+    const ly = $(`[data-ly="${sel}"]`); ly && ly.classList.add('on');
+    Object.assign(sb.style, { display:'block', left:f.ax - 1 + 'px', top:f.ay - 1 + 'px', width:f.w + 2 + 'px', height:f.h + 2 + 'px' });
+    $('b', sb).textContent = `${f.w} × ${f.h}`;
+    if (zoom) zoomTo({ x:f.ax, y:f.ay - 30, w:f.w, h:f.h + 30 }, { pad: innerWidth <= 760 ? 20 : 70, max:1.4, instant });
+    try { history.replaceState(null, '', '#' + sel); } catch (e) {}
+  } else { sb.style.display = 'none'; try { history.replaceState(null, '', location.pathname); } catch (e) {} }
+  document.body.classList.toggle('has-sel', !!sel);
+  document.body.classList.remove('show-info');
+  renderPanel();
+}
+
+// pointer: pan / pinch / click
+const pts = new Map(); let drag = null, pinch = null;
+cv.addEventListener('pointerdown', e => {
+  if (e.button === 2) return;
+  cancelAnimationFrame(anim);
+  cv.setPointerCapture(e.pointerId);
+  pts.set(e.pointerId, { x:e.clientX, y:e.clientY });
+  if (pts.size === 2){
+    const [a, b] = [...pts.values()];
+    pinch = { d:Math.hypot(a.x - b.x, a.y - b.y), z, tx, ty, mx:(a.x + b.x) / 2, my:(a.y + b.y) / 2 }; drag = null; return;
+  }
+  drag = { x:e.clientX, y:e.clientY, tx, ty, moved:false, target:e.target };
+  if (tool === 'hand' || space || e.button === 1) cv.classList.add('grabbing');
+});
+cv.addEventListener('pointermove', e => {
+  if (!pts.has(e.pointerId)) return;
+  pts.set(e.pointerId, { x:e.clientX, y:e.clientY });
+  const R = cv.getBoundingClientRect();
+  if (pinch && pts.size >= 2){
+    const [a, b] = [...pts.values()], d = Math.hypot(a.x - b.x, a.y - b.y), mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+    const nz = Math.min(4, Math.max(.05, pinch.z * d / pinch.d)), px = pinch.mx - R.left, py = pinch.my - R.top;
+    z = nz; tx = px - (px - pinch.tx) * (nz / pinch.z) + (mx - pinch.mx); ty = py - (py - pinch.ty) * (nz / pinch.z) + (my - pinch.my); apply(); return;
+  }
+  if (!drag) return;
+  const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+  if (!drag.moved && Math.hypot(dx, dy) > 4){ drag.moved = true; cv.classList.add('grabbing'); }
+  if (drag.moved){ tx = drag.tx + dx; ty = drag.ty + dy; apply(); }
+});
+const up = e => {
+  pts.delete(e.pointerId);
+  if (pts.size < 2) pinch = null;
+  cv.classList.remove('grabbing');
+  if (drag && !drag.moved && e.type === 'pointerup' && tool === 'move' && !space){
+    const t = drag.target, go = t.closest && t.closest('[data-go]'), fr = t.closest && t.closest('[data-fr]');
+    const zm = t.closest && t.closest('[data-zoom]');
+    if (go) select(go.dataset.go, true);
+    else if (zm) doZoom(zm);
+    else if (fr) select(fr.dataset.fr, false);
+    else select(null);
+  }
+  drag = null;
+};
+cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
+cv.addEventListener('dblclick', e => { const fr = e.target.closest('[data-fr]'); if (fr) select(fr.dataset.fr, true); });
+cv.addEventListener('wheel', e => {
+  e.preventDefault(); cancelAnimationFrame(anim);
+  const R = cv.getBoundingClientRect();
+  if (e.ctrlKey || e.metaKey) zoomAt(Math.exp(-e.deltaY * (e.deltaMode ? .05 : .0035) * (e.ctrlKey && !e.metaKey && Math.abs(e.deltaY) < 50 ? 2.2 : 1)), e.clientX - R.left, e.clientY - R.top);
+  else { const k = e.deltaMode ? 16 : 1; tx -= (e.shiftKey && !e.deltaX ? e.deltaY : e.deltaX) * k; ty -= (e.shiftKey && !e.deltaX ? 0 : e.deltaY) * k; apply(); }
+}, { passive:false });
+// Safari trackpad pinch
+let gz = 1; cv.addEventListener('gesturestart', e => { e.preventDefault(); gz = 1; });
+cv.addEventListener('gesturechange', e => { e.preventDefault(); const R = cv.getBoundingClientRect(); zoomAt(e.scale / gz, e.clientX - R.left, e.clientY - R.top); gz = e.scale; });
+
+// chrome buttons
+document.addEventListener('click', e => {
+  const u = e.target.closest('[data-ui]'), go = e.target.closest('[data-go]'), zm = e.target.closest('[data-zoom]');
+  if (go && !cv.contains(go)){ select(go.dataset.go, true); if (innerWidth <= 760) document.body.classList.remove('show-layers'); return; }
+  if (zm && !cv.contains(zm)){ doZoom(zm); return; }
+  if (!u) return;
+  const C = { w:cv.clientWidth / 2, h:cv.clientHeight / 2 };
+  switch (u.dataset.ui){
+    case 'zin': zoomAt(1.25, C.w, C.h); break;
+    case 'zout': zoomAt(.8, C.w, C.h); break;
+    case 'fit': zoomTo(bounds(), { pad:30 }); break;
+    case 'tool': setTool(u.dataset.v); break;
+    case 'theme': { const cur = document.documentElement.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'), n = cur === 'dark' ? 'light' : 'dark'; document.documentElement.dataset.theme = n; try { sessionStorage.setItem('sg-theme', n); } catch (er) {} break; }
+    case 'layers': document.body.classList.toggle('show-layers'); break;
+    case 'info': document.body.classList.toggle('show-info'); break;
+    case 'desel': select(null); break;
+  }
+});
+function doZoom(zm){
+  const id = zm.dataset.zoom; select(null);
+  if (zm.dataset.sub === 'sticky'){ const L = STICKIES.filter(s => s.sec === id), S = SEC[id], x0 = Math.min(...L.map(s => s.x)), y0 = Math.min(...L.map(s => s.y)), x1 = Math.max(...L.map(s => s.x + s.w)), y1 = Math.max(...L.map(s => s.y + s.h)); zoomTo({ x:S.x + x0, y:S.y + y0, w:x1 - x0, h:y1 - y0 }, { max:1 }); }
+  else zoomTo(secRect(id), { pad:40 });
+  if (innerWidth <= 760) document.body.classList.remove('show-layers');
+}
+function setTool(t){ tool = t; document.querySelectorAll('[data-ui="tool"]').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === t)); cv.classList.toggle('hand', t === 'hand'); }
+
+// keyboard
+document.addEventListener('keydown', e => {
+  if (/INPUT|TEXTAREA/.test(e.target.tagName)) return;
+  const C = { w:cv.clientWidth / 2, h:cv.clientHeight / 2 };
+  if (e.code === 'Space' && !space){ space = true; cv.classList.add('grab'); if (e.target === document.body || e.target === cv) e.preventDefault(); return; }
+  if (e.shiftKey && e.code === 'Digit1'){ e.preventDefault(); zoomTo(bounds(), { pad:30 }); return; }
+  if (e.shiftKey && e.code === 'Digit2'){ e.preventDefault(); sel ? select(sel, true) : zoomTo(secRect('journey'), { pad:40 }); return; }
+  if (e.metaKey || e.ctrlKey){
+    if (e.key === '=' || e.key === '+'){ e.preventDefault(); zoomAt(1.25, C.w, C.h); }
+    if (e.key === '-'){ e.preventDefault(); zoomAt(.8, C.w, C.h); }
+    if (e.key === '0'){ e.preventDefault(); zoomAt(1 / z, C.w, C.h); }
+    return;
+  }
+  if (e.key === '=' || e.key === '+') zoomAt(1.25, C.w, C.h);
+  else if (e.key === '-') zoomAt(.8, C.w, C.h);
+  else if (e.key === 'v' || e.key === 'V') setTool('move');
+  else if (e.key === 'h' || e.key === 'H') setTool('hand');
+  else if (e.key === 'Escape') select(null);
+  else if (e.key === 'ArrowRight' || e.key === 'ArrowLeft'){
+    const i = sel ? FRAMES.findIndex(f => f.id === sel) : -1, d = e.key === 'ArrowRight' ? 1 : -1;
+    const n = i < 0 ? (d > 0 ? 0 : FRAMES.length - 1) : Math.min(FRAMES.length - 1, Math.max(0, i + d));
+    e.preventDefault(); select(FRAMES[n].id, true);
+  }
+});
+document.addEventListener('keyup', e => { if (e.code === 'Space'){ space = false; cv.classList.remove('grab'); } });
+let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { if (sel) select(sel, true); }, 150); });
+
+/* ========== init ========== */
+(function init(){
+  try { const t = sessionStorage.getItem('sg-theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+  renderWorld(); renderLayers(); renderPanel();
+  const m = /^#(S[1-8])$/i.exec(location.hash);
+  const start = () => {
+    if (m) select(m[1].toUpperCase(), true, true);
+    else if (innerWidth <= 760) zoomTo({ x:0, y:-44, w:1300, h:SEC.journey.h + 44 }, { pad:12, instant:true });
+    else if (cv.clientWidth < 1500) zoomTo({ x:0, y:-44, w:J.padX + J.labW + J.colW * 5 + 20, h:SEC.journey.h + 44 }, { pad:24, instant:true });
+    else zoomTo(secRect('journey'), { pad:40, instant:true });
+  };
+  start();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (!drag) start(); });
+})();
+</script>
+</body>
+</html>
